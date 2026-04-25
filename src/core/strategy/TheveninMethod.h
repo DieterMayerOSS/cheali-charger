@@ -32,6 +32,7 @@ namespace TheveninMethod {
     AnalogInputs::ValueType getReadableRthCell(uint8_t cell);
     AnalogInputs::ValueType getReadableBattRth();
     AnalogInputs::ValueType getReadableWiresRth();
+    bool isConstantVoltagePhase();
 };
 
 

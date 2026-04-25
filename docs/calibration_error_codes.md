@@ -12,6 +12,12 @@ for: **I charge "nr"**
 - **"nr"** = 2,3,5,6,7,12,13,15,16,17 - calibrate "I charge" again
 - **"nr"** = 4,14 - decrease the maximum charge current: "settings"->"max Ic:"
 
+**Note for Dual-Power-B6AC-80W-RC and similar chargers:**  
+Error 4 or 14 during AGM/Pb float charge is typically caused by `max Ic` being set  
+higher than what the calibration range supports. The default is capped at 5.0A in firmware  
+(lowered from the hardware limit of 5.9A). If you still see the error after a settings reset,  
+decrease `max Ic` manually in "settings".
+
 
 for: **I discharge "nr"**
 

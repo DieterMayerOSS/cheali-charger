@@ -62,6 +62,7 @@ namespace ProgramMenus {
     STRING(storageAndBalance,   "storage+balanc");
     STRING(dcCycle,             "D>C format");
     STRING(capacityCheck,       "capacity check");
+    STRING(pbFloat,             "float charge");
     STRING(editBattery,         "edit battery");
 }
 
@@ -81,6 +82,7 @@ namespace ProgramData {
     STRING(battery_NiCd,    "NiCd");
     STRING(battery_NiMH,    "NiMH");
     STRING(battery_Pb,      "Pb  ");
+    STRING(battery_AGM,     "AGM ");
     STRING(battery_Life,    "Life");
     STRING(battery_Lilo,    "Lilo");
     STRING(battery_Lipo,    "Lipo");

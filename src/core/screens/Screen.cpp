@@ -39,7 +39,7 @@ namespace Screen {
 
     //see PAGE_PROGRAM
     //see PAGE_BATTERY
-    STATIC_ASSERT_MSG(ProgramData::LAST_BATTERY_CLASS == 6 && Program::LAST_PROGRAM_TYPE == 9 + 2, "see ScreenPages.h");
+    STATIC_ASSERT_MSG(ProgramData::LAST_BATTERY_CLASS == 6 && Program::LAST_PROGRAM_TYPE == 10 + 2, "see ScreenPages.h");
 
     uint32_t getConditions() {
         uint32_t c = 0;

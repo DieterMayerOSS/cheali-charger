@@ -30,8 +30,8 @@
 namespace Screen { namespace Pages {
 
 /*condition bits:
- * 0..8:    PAGE_PROGRAM(..)
- * 9..16:   PAGE_BATTERY(CLASS)
+ * 0..9:    PAGE_PROGRAM(..)
+ * 10..17:  PAGE_BATTERY(CLASS)
  * 29:      PAGE_START_INFO
  * 30:      PAGE_BALANCE_PORT
 */
@@ -63,6 +63,8 @@ BALANCER_PORTS_GT_6(
             {Screen::Balancer::displayResistance7_9,PAGE_BALANCE_PORT, PAGE_START_INFO + PAGE_PROGRAM(Program::Balance)},)
 
             {Screen::Methods::displayR,             PAGE_ALWAYS, PAGE_START_INFO + PAGE_PROGRAM(Program::Balance)},
+
+            {Screen::Methods::displayPbFloatStatus, PAGE_PROGRAM(Program::PbFloatCharge), PAGE_START_INFO},
 
             {Screen::Methods::displayTime,          PAGE_ALWAYS, PAGE_START_INFO},
             {Screen::Methods::displayTemperature,   PAGE_ALWAYS, PAGE_NONE},

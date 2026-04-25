@@ -224,3 +224,23 @@ void Screen::Methods::displayEnergy()
     lcdPrintSpaces();
 }
 
+void Screen::Methods::displayPbFloatStatus()
+{
+    // Line 1: phase (CC/CV) + current + total charge
+    lcdSetCursor0_0();
+    if(TheveninMethod::isConstantVoltagePhase()) {
+        lcdPrint_P(PSTR("CV "));
+    } else {
+        lcdPrint_P(PSTR("CC "));
+    }
+    AnalogInputs::printRealValue(AnalogInputs::Iout, 7);
+    lcdPrintSpaces();
+
+    // Line 2: live battery voltage → target float voltage
+    lcdSetCursor0_1();
+    AnalogInputs::printRealValue(AnalogInputs::Vout, 7);
+    lcdPrint_P(PSTR("\x7e")); // → arrow
+    lcdPrintVoltage(Strategy::endV, 7);
+    lcdPrintSpaces();
+}
+

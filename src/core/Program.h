@@ -26,6 +26,7 @@ namespace Program {
     enum ProgramType {
         Charge, ChargeBalance, Balance, Discharge, FastCharge,
         Storage, StorageBalance, DischargeChargeCycle, CapacityCheck,
+        PbFloatCharge,
         EditBattery,
         Calibrate,
         LAST_PROGRAM_TYPE};

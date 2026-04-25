@@ -50,6 +50,7 @@ namespace Program {
     void setupBalance();
     void setupDeltaCharge();
     void setupPowerSupplyCharge();
+    void setupPbFloat();
     void setupProgramType(ProgramType prog);
 
 } //namespace Program
@@ -110,6 +111,19 @@ void Program::setupPowerSupplyCharge()
     Strategy::strategy = &SimpleChargeStrategy::vtable;
 }
 
+void Program::setupPbFloat()
+{
+    // Float/maintenance charge: CCCV at float voltage, runs indefinitely.
+    // Phase 1 (CC): charges at battery.Ic until float voltage is reached.
+    // Phase 2 (CV): Thevenin algorithm tapers current down to whatever the
+    //               parasitic load (alarm/GPS) draws to maintain float voltage.
+    // Terminates only if current drops below battery.minIc (= Ic/10), which
+    // won't happen as long as alarm/GPS draws more current than that.
+    // AGM float: 2.275V/cell, Pb float: 2.250V/cell
+    Strategy::setVI(ProgramData::VStorage, true);
+    Strategy::strategy = &TheveninChargeStrategy::vtable;
+}
+
 
 void Program::setupBalance()
 {
@@ -151,6 +165,9 @@ void Program::setupProgramType(ProgramType prog) {
     case Program::StorageBalance:
         Strategy::doBalance = true;
         setupStorage();
+        break;
+    case Program::PbFloatCharge:
+        setupPbFloat();
         break;
     default:
         break;

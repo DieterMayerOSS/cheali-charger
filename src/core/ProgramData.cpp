@@ -40,9 +40,17 @@ const AnalogInputs::ValueType voltsPerCell[][ProgramData::LAST_VOLTAGE_TYPE] PRO
 //http://www.battery-usa.com/Catalog/NPAppManual%28Rev0500%29.pdf
 //charge start current 0.25C (stage 1 - constant current)
 //charge end current 0.05C (end current = start current / 5) (stage 2 - constant voltage)
-//Stage 3 (float charge) - not implemented
+//Stage 3 (float charge) - use the "float charge" program
 //http://batteryuniversity.com/learn/article/charging_the_lead_acid_battery
-/*Pb*/      { ANALOG_VOLT(2.000), ANALOG_VOLT(2.450), ANALOG_VOLT(1.750), ANALOG_VOLT(0.000), ANALOG_VOLT(1.900)},
+//float voltage 2.25V/cell for flooded Pb (BU-403: 2.25-2.27V/cell recommended)
+/*Pb*/      { ANALOG_VOLT(2.000), ANALOG_VOLT(2.450), ANALOG_VOLT(1.750), ANALOG_VOLT(2.250), ANALOG_VOLT(1.900)},
+
+//AGM (Absorbent Glass Mat) - sealed VRLA lead-acid, less aggressive than flooded Pb
+//https://batteryuniversity.com/article/bu-403-charging-lead-acid
+//charge voltage 2.30V/cell (lower than flooded to prevent gassing in sealed design)
+//float voltage 2.275V/cell for AGM (BU-403: 2.25-2.30V/cell; conservative mid-range)
+//discharge cutoff same as flooded Pb
+/*AGM*/     { ANALOG_VOLT(2.000), ANALOG_VOLT(2.300), ANALOG_VOLT(1.750), ANALOG_VOLT(2.275), ANALOG_VOLT(1.900)},
 
 //LiXX
 //based on imaxB6 manual
@@ -104,6 +112,7 @@ const char * const  ProgramData::batteryString[] PROGMEM = {
         string_battery_NiCd,
         string_battery_NiMH,
         string_battery_Pb,
+        string_battery_AGM,
         string_battery_Life,
         string_battery_Lilo,
         string_battery_Lipo,
@@ -121,6 +130,7 @@ const ProgramData::BatteryClass ProgramData::batteryClassMap[] PROGMEM = {
 /*NiCd*/    ClassNiXX,
 /*NiMH*/    ClassNiXX,
 /*Pb*/      ClassPb,
+/*AGM*/     ClassPb,
 /*Life*/    ClassLiXX,
 /*Lilo*/    ClassLiXX,
 /*Lipo*/    ClassLiXX,

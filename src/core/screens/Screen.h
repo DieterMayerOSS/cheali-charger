@@ -38,7 +38,7 @@
 #define PAGE_START_INFO             (1L<<30)
 #define PAGE_BALANCE_PORT           (1L<<29)
 #define PAGE_PROGRAM(program)       (1<<(program))
-#define PAGE_BATTERY(_class)        ((1<<9)<<(_class))
+#define PAGE_BATTERY(_class)        ((1UL<<10)<<(_class))
 
 namespace Screen {
 

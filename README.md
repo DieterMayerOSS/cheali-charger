@@ -34,7 +34,19 @@ Features
   - balancing
 - Pb: - not well tested!
   - charging
+  - fast charging
   - discharging
+  - cycling
+- AGM (Absorbent Glass Mat / sealed lead-acid): - not well tested!
+  - charging (Thévenin CCCV, terminates at 10% of Ic by default)
+  - fast charging
+  - discharging
+  - cycling
+  - **[float charge](docs/pb_agm_float_charge.md)** (maintenance mode):
+    - charges at Ic in CC phase until float voltage is reached, then holds CV indefinitely
+    - suitable for keeping a motorbike/car battery topped up against parasitic drain
+    - float voltage: 2.275V/cell (13.65V for 12V/6-cell battery)
+    - charge voltage: 2.300V/cell (13.80V for 12V/6-cell battery)
 - Internal resistance display
   - single cell resistance
   - whole battery resistance
@@ -113,6 +125,7 @@ charing/discharging...:
 
 1. informations about [settings](docs/settings/settings.md)
 2. [charging NiMH and NiCd batteries](docs/nimh_nicd_charging.md)
+3. [Pb/AGM float charge](docs/pb_agm_float_charge.md)
 
 [Flashing](docs/flashing.md)
 ----------------------------

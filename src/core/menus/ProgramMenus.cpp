@@ -77,6 +77,7 @@ namespace ProgramMenus {
             Program::Charge,
             Program::Discharge,
             Program::FastCharge,
+            Program::PbFloatCharge,
             Program::DischargeChargeCycle,
             Program::CapacityCheck,
             Program::EditBattery,
@@ -98,6 +99,7 @@ namespace ProgramMenus {
             string_storageAndBalance,
             string_dcCycle,
             string_capacityCheck,
+            string_pbFloat,
             string_editBattery,
     };
 

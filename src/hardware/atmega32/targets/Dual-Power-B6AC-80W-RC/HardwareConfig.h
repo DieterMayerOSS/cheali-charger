@@ -28,6 +28,9 @@
 #define MAX_CHARGE_V            ANALOG_VOLT(27.000)
 //#define MAX_CHARGE_I            ANALOG_AMP(6.000)     //documentation says 6A, but the ADC sees maximum 5.9A
 #define MAX_CHARGE_I            ANALOG_AMP(5.900)       //based on trashmaster9000 eeprom
+// Default maxIc in settings limited to 5.0A to stay within calibration interpolation range.
+// 5.9A causes uint16 overflow in reverseCalibrateValue() when Ismps is calibrated only up to 1A.
+#define SETTINGS_MAX_CHARGE_I   ANALOG_AMP(5.000)
 #define MAX_CHARGE_P            ANALOG_WATT(80.000)
 
 #define MAX_DISCHARGE_P         ANALOG_WATT(10.000)

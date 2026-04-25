@@ -96,7 +96,7 @@ const EditMenu::StaticEditData editData[] PROGMEM = {
 {string_Vc_per_cell,    COND_Unknown,       BATTERY(V, Vc_per_cell),                {50,ANALOG_VOLT(0.0),MAX_CHARGE_V}},
 {string_Vcutoff,        ADV(NiXX),          BATTERY(V, Vc_per_cell),                {CE_STEP_TYPE_KEY_SPEED, ANALOG_VOLT(1.200), ANALOG_VOLT(2.000)}},
 {string_Vcutoff,        COND_LED,           BATTERY(V, Vc_per_cell),                {CE_STEP_TYPE_SMART, ANALOG_VOLT(0.001), MAX_CHARGE_V}},
-{string_Vs_per_cell,    ADV(LiXX),          BATTERY(V, Vs_per_cell),                {CE_STEP_TYPE_KEY_SPEED,ANALOG_VOLT(0.0),ANALOG_VOLT(5.0)}},
+{string_Vs_per_cell,    ADV(LiXX_NiZn_Pb),  BATTERY(V, Vs_per_cell),                {CE_STEP_TYPE_KEY_SPEED,ANALOG_VOLT(0.0),ANALOG_VOLT(5.0)}},
 {string_Vd_per_cell,    COND_BATT_UNKN+COND_advanced, BATTERY(V, Vd_per_cell),      {CE_STEP_TYPE_KEY_SPEED,ANALOG_VOLT(0.0),ANALOG_VOLT(5.0)}},
 {string_Vd_per_cell,    COND_Unknown,       BATTERY(V, Vd_per_cell),                {50,ANALOG_VOLT(0.0),MAX_CHARGE_V}},
 {string_capacity,       COND_BATTERY,       BATTERY(CHARGE, capacity),              {CE_STEP_TYPE_SMART, ANALOG_MIN_CHARGE, ANALOG_MAX_CHARGE}},

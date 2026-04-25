@@ -39,8 +39,8 @@ NiMH, NiCd specific settings:
 2. see also [artificial adc noise](../artificial_adc_noise.md).
 
 
-LiXX, NiZn, Pb specific settings:
----------------------------------
+LiXX, NiZn, Pb, AGM specific settings:
+----------------------------------------
 
 | name                                              | description          | affects batteries |
 |---------------------------------------------------|----------------------|------------------:|
@@ -63,7 +63,9 @@ LiXX, NiZn, Pb specific settings:
    You can measure this value in "option"->"calibrate"->"I charge"->"100mA":
    - press "inc","dec" until measured current is the lowest possible but bigger than 0mA.
    - press "stop" to exit (don't save this setting!) 
-4. LiXX := Lipo, Life, Lilo, L430, L435, see [ProgramData.cpp](../../src/core/ProgramData.cpp#L50-L54)
+4. LiXX := Lipo, Life, Lilo, L430, L435, see [ProgramData.cpp](../../src/core/ProgramData.cpp#L58-L62)
+5. also applies to AGM batteries (same ClassPb charging strategy)
+
 
 UART settings:
 --------------
