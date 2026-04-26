@@ -226,6 +226,19 @@ void Screen::Methods::displayEnergy()
 
 void Screen::Methods::displayPbFloatStatus()
 {
+    if(DelayStrategy::isDelay()) {
+        // Waiting between float charge cycles
+        lcdSetCursor0_0();
+        lcdPrint_P(PSTR("W  "));
+        lcdPrintTime(Monitor::getTimeSec(), 7);
+        lcdPrintSpaces();
+
+        lcdSetCursor0_1();
+        AnalogInputs::printRealValue(AnalogInputs::Vout, 7);
+        lcdPrintSpaces();
+        return;
+    }
+
     // Line 1: phase (CC/CV) + current + total charge
     lcdSetCursor0_0();
     if(TheveninMethod::isConstantVoltagePhase()) {

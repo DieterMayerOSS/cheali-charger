@@ -294,6 +294,11 @@ void ProgramData::changedType()
         battery.balancerError = ANALOG_VOLT(0.008);
         battery.Vs_per_cell = getDefaultVoltagePerCell(VStorage);
     }
+
+    if(isPb()) {
+        battery.cells = 6;
+        battery.capacity = ANALOG_CHARGE(5.000);
+    }
     changedCapacity();
 
 }
