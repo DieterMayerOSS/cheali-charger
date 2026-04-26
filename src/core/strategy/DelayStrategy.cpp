@@ -67,3 +67,10 @@ void DelayStrategy::setDelay(uint16_t minutes)
    delay_ = minutes*60;
 }
 
+uint16_t DelayStrategy::getRemainingSeconds()
+{
+    uint16_t elapsed = Time::diffU16(start_time_U16_, Time::getSecondsU16());
+    if(elapsed >= delay_) return 0;
+    return delay_ - elapsed;
+}
+

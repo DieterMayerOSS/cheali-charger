@@ -30,6 +30,7 @@ namespace DelayStrategy {
 
     bool isDelay();
     void setDelay(uint16_t minutes);
+    uint16_t getRemainingSeconds();
 
 };
 

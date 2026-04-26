@@ -67,7 +67,7 @@ During float charge, a dedicated status screen is available (press `Inc`/`Dec` t
 | Field         | Description                                              |
 |:--------------|:---------------------------------------------------------|
 | `W`           | Waiting before restarting float charge                   |
-| `00:12:34`    | Time elapsed since the wait started                      |
+| `00:12:34`    | Countdown to next charge restart                         |
 | `13.521V`     | Battery resting voltage (charger output off)             |
 
 Battery setup
