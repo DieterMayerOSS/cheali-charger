@@ -25,6 +25,12 @@ namespace PbFloatStrategy {
     void powerOn();
     Strategy::statusType doStrategy();
     void powerOff();
+
+    bool isCC();
+    bool isStabPause();
+    bool isCV();
+    bool isRestWait();
+    uint16_t getStabRemainingSeconds();
 };
 
 #endif /* PBFLOATSTRATEGY_H_ */

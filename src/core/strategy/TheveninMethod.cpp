@@ -69,7 +69,6 @@ namespace TheveninMethod {
 
 AnalogInputs::ValueType TheveninMethod::getReadableRthCell(uint8_t cell) { return tBal_[cell].Rth.getReadableRth(); }
 AnalogInputs::ValueType TheveninMethod::getReadableBattRth()             { return tVout_.Rth.getReadableRth(); }
-bool TheveninMethod::isConstantVoltagePhase()                            { return state_ == ConstantVoltageBalancing; }
 AnalogInputs::ValueType TheveninMethod::getReadableWiresRth()
 {
     Resistance R;

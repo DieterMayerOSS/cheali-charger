@@ -72,7 +72,7 @@ const Settings defaultSettings PROGMEM = {
         Settings::Disabled, //UART - disabled
         3,                   //57600
         Settings::TempOutput, //UARToutput
-        Settings::MenuSimple, //menuType
+        Settings::MenuAdvanced, //menuType
         Settings::MenuButtonsReversed, //menuButtons
 };
 

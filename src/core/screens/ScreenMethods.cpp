@@ -30,6 +30,7 @@
 #include "PolarityCheck.h"
 #include "ScreenMethods.h"
 #include "Balancer.h"
+#include "PbFloatStrategy.h"
 
 namespace Screen { namespace Methods {
 
@@ -226,22 +227,38 @@ void Screen::Methods::displayEnergy()
 
 void Screen::Methods::displayPbFloatStatus()
 {
-    if(DelayStrategy::isDelay()) {
-        // Waiting between float charge cycles - show countdown
+    if(PbFloatStrategy::isRestWait()) {
+        // Waiting between CV cycles - show countdown
         lcdSetCursor0_0();
-        lcdPrint_P(PSTR("W  "));
-        lcdPrintTime(DelayStrategy::getRemainingSeconds(), 7);
+        lcdPrint_P(PSTR("Wait "));
+        lcdPrintTime(DelayStrategy::getRemainingSeconds(), 5);
         lcdPrintSpaces();
 
         lcdSetCursor0_1();
+        lcdPrint_P(PSTR("Vbat="));
         AnalogInputs::printRealValue(AnalogInputs::Vout, 7);
         lcdPrintSpaces();
         return;
     }
 
-    // Line 1: phase (CC/CV) + current + total charge
+    if(PbFloatStrategy::isStabPause()) {
+        // Stabilisation pause between CC and CV
+        lcdSetCursor0_0();
+        lcdPrint_P(PSTR("Pause"));
+        lcdPrintTime(PbFloatStrategy::getStabRemainingSeconds(), 5);
+        lcdPrintSpaces();
+
+        lcdSetCursor0_1();
+        lcdPrint_P(PSTR("Vbat="));
+        AnalogInputs::printRealValue(AnalogInputs::Vout, 7);
+        lcdPrintSpaces();
+        return;
+    }
+
+    // CC or CV active charging phase
+    // Line 1: phase label + charge current
     lcdSetCursor0_0();
-    if(TheveninMethod::isConstantVoltagePhase()) {
+    if(PbFloatStrategy::isCV()) {
         lcdPrint_P(PSTR("CV "));
     } else {
         lcdPrint_P(PSTR("CC "));

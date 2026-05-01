@@ -319,8 +319,15 @@ void ProgramData::changedCapacity()
 {
     ProgramData::check();
     ProgramData::battery.Ic = ProgramData::battery.capacity;
-    if(ProgramData::battery.type == Pb)
-        ProgramData::battery.Ic/=4;
+    if(ProgramData::battery.type == Pb) {
+        // Flooded Pb: 0.25C initial CC current (Yuasa, Battery University BU-403)
+        ProgramData::battery.Ic /= 4;
+    } else if(ProgramData::battery.type == AGM) {
+        // AGM/VRLA: 0.4C initial CC current
+        // Sources: Odyssey/Enersys spec (recommended optimum rate for AGM),
+        // Battery University BU-403: 0.2C–0.3C for VRLA/AGM
+        ProgramData::battery.Ic /= 5; //let's be conservative and use 0.2C for all AGM
+    }
 
     changedIc();
     ProgramData::battery.Id = ProgramData::battery.capacity;
