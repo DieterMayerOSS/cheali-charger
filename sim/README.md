@@ -104,6 +104,26 @@ These are pinned down by tests so any future change must be conscious.
   shunts). A three-point upgrade is real work and would need hardware
   verification.
 
+## Hardware-only diagnostic builds (Mega 400Wx2)
+
+Two helper firmware targets that run the on-board diagnostic
+analyzers instead of the normal charger logic — no SMPS output,
+no battery drive, just ADC readings on the LCD. Useful for
+verifying fixes on the real hardware without serial-port access.
+
+- `Turnigy-MEGA-400Wx2-BalancePortAnalyzer_atmega32` — cycles
+  through Vb0_pin..Vb6_pin, V+_pin, V-_pin raw ADC values;
+  toggle balancer discharge per cell from the menu.
+- `Turnigy-MEGA-400Wx2-AnalogInputsAnalyzer_atmega32` —
+  full inventory of every physical ADC channel (voltages,
+  currents, internal/external temperature, balance-port pins).
+
+Both targets use the same Mega 400Wx2 pin layout, power limits,
+and factory calibration defaults as the normal firmware, so
+flashing them does not invalidate stored calibration data.
+Flash back to `Turnigy-MEGA-400Wx2_atmega32.hex` to return to
+normal operation.
+
 ## Build (MSYS2 UCRT64)
 
 ```
