@@ -13,6 +13,7 @@ endif()
 
 add_library(sim_algorithms STATIC
     algorithms/find_min_cell.cpp
+    algorithms/thevenin.cpp
 )
 target_include_directories(sim_algorithms PUBLIC algorithms)
 
@@ -21,3 +22,7 @@ enable_testing()
 add_executable(test_find_min_cell tests/test_find_min_cell.cpp)
 target_link_libraries(test_find_min_cell PRIVATE sim_algorithms)
 add_test(NAME find_min_cell COMMAND test_find_min_cell)
+
+add_executable(test_thevenin tests/test_thevenin.cpp)
+target_link_libraries(test_thevenin PRIVATE sim_algorithms)
+add_test(NAME thevenin COMMAND test_thevenin)
