@@ -56,7 +56,7 @@ const Menu::StaticMenu optionsStaticMenu[] PROGMEM = {
 
 void run()
 {
-    //TODO: rewrite
+    bool savedExternT = ProgramData::battery.enable_externT;
     ProgramData::battery.enable_externT = 0;
     SerialLog::powerOn();
 
@@ -64,6 +64,7 @@ void run()
     check();
 
     SerialLog::powerOff();
+    ProgramData::battery.enable_externT = savedExternT;
     Program::programState = Program::Done;
 }
 

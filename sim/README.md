@@ -64,6 +64,17 @@ behaviour. See the relevant commit message for context.
    Now loops over `MAX_BALANCE_CELLS` and validates each with a
    1–4 V range. `Vb0_pin` is intentionally not checked (factory
    defaults leave it uncalibrated).
+7. **User preference clobbered by calibration menu** — entering
+   `Calibration::run()` unconditionally set `enable_externT = 0`,
+   and `externalTemperatureCalibration()` set it to `1`. Neither
+   restored the original value, so the user's external-temperature-
+   monitoring preference was silently flipped depending on which
+   submenu they last visited. Both call sites now save and restore
+   the flag around their runtime use, preserving the stored
+   preference. (Author had `//TODO: rewrite` on these lines.)
+
+Version bumped to 3.0 to mark this maintenance pass as a distinct
+fork-state from upstream 2.02.
 
 ## Findings documented but deliberately NOT fixed
 

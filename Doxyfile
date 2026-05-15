@@ -5,7 +5,7 @@
 # Defaults are used for everything not overridden here.
 
 PROJECT_NAME           = "cheali-charger"
-PROJECT_NUMBER         = "2.02"
+PROJECT_NUMBER         = "3.0"
 PROJECT_BRIEF          = "Open-source firmware for LiPo chargers"
 
 OUTPUT_DIRECTORY       = docs-doxygen

@@ -273,15 +273,16 @@ const AnalogInputs::Name externTName[] PROGMEM = { AnalogInputs::Textern };
 
 void externalTemperatureCalibration()
 {
+    bool savedExternT = ProgramData::battery.enable_externT;
     calibrationPoint = 0;
     SerialLog::powerOff();
-    //TODO: rewrite
     ProgramData::battery.enable_externT = 1;
 
     AnalogInputs::powerOn(false);
     runCalibrationMenu(editExternTData, externTName, externTName, true);
     AnalogInputs::powerOff();
 
+    ProgramData::battery.enable_externT = savedExternT;
     SerialLog::powerOn();
 }
 
