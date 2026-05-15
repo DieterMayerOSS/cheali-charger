@@ -26,6 +26,7 @@
 #include <string.h>
 #include <inttypes.h>
 #include <avr/interrupt.h>
+#include "HardwareConfig.h"
 
 #define DISABLE_RX
 
@@ -37,8 +38,10 @@
 #endif
 
 // this next line disables the entire HardwareSerial.cpp,
-// this is so I can support Attiny series and any other chip without a uart
-#if defined(UBRRH) || defined(UBRR0H) || defined(UBRR1H) || defined(UBRR2H) || defined(UBRR3H)
+// this is so I can support Attiny series and any other chip without a uart,
+// and also targets that explicitly opt out via `#undef ENABLE_SERIAL_LOG`
+// in their HardwareConfig.h (e.g. chargers with no exposed TXD/RXD pins).
+#if (defined(UBRRH) || defined(UBRR0H) || defined(UBRR1H) || defined(UBRR2H) || defined(UBRR3H)) && defined(ENABLE_SERIAL_LOG)
 
 #include "HardwareSerial.h"
 

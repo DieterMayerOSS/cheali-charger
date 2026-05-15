@@ -72,6 +72,16 @@ behaviour. See the relevant commit message for context.
    submenu they last visited. Both call sites now save and restore
    the flag around their runtime use, preserving the stored
    preference. (Author had `//TODO: rewrite` on these lines.)
+8. **SerialLog disabled on Mega 400Wx2** — the charger PCB has no
+   TXD/RXD pins exposed, so the SerialLog facility was writing to
+   a wire nobody listens to, occupying ~2 KB Flash and ~280 B SRAM
+   (`tx_buffer` ring buffer + `Serial0` state). `ENABLE_SERIAL_LOG`
+   was already a config switch but unconditional in `GlobalConfig.h`;
+   per-target `#undef` plus a small guard in `HardwareSerial.cpp`
+   now drops the entire serial stack when not needed. Targets with
+   accessible serial pins (e.g. imaxB6-original) still build with
+   SerialLog enabled. Mega 400Wx2 main build went from 94.6% to
+   88.3% Flash and 51.5% to 37.3% SRAM.
 
 Version bumped to 3.0 to mark this maintenance pass as a distinct
 fork-state from upstream 2.02.

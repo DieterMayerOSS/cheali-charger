@@ -18,6 +18,9 @@
 #include "HardwareConfigGeneric.h"
 #include "GTPowerA6-10-pins.h"
 
+// Same hardware as the main Mega 400Wx2 build — no serial port.
+#undef ENABLE_SERIAL_LOG
+
 #define ENABLE_HELPER
 #define ENABLE_HELPER_ANALOG_INPUTS_ANALYZER
 

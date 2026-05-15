@@ -22,6 +22,12 @@
 #include "HardwareConfigGeneric.h"
 #include "GTPowerA6-10-pins.h"
 
+// Turnigy MEGA 400Wx2 has no exposed serial port (no TXD/RXD pin
+// header on the PCB), so the SerialLog facility writes to a wire
+// nobody listens to. Disable it to reclaim ~280 B SRAM (tx_buffer
+// + Serial0) and ~1-3 KB of flash.
+#undef ENABLE_SERIAL_LOG
+
 #define MAX_CHARGE_V            ANALOG_VOLT(27.000)
 #define MAX_CHARGE_I            ANALOG_AMP(20.000)
 #define MAX_CHARGE_P            ANALOG_WATT(400.000)
