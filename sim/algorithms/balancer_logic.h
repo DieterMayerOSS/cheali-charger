@@ -23,13 +23,9 @@ uint16_t calculate_per_cell(uint16_t v, uint8_t cell_count);
 // Returns true iff (Vmax - Vmin) among *connected* cells exceeds
 // balancer_error (strict >).
 //
-// QUIRK preserved verbatim: when no cells are connected, the firmware
-// initialises Vmin=UINT16_MAX, Vmax=0, never updates them, and then
-// computes (Vmax - Vmin) in uint16_t — which underflows to 1.
-// That value is then compared to balancer_error, which is always >=2
-// in any sane configuration, so the function returns false. The quirky
-// "1" never causes a real bug, but a refactor that "fixes" this without
-// understanding it might introduce one.
+// HISTORY: previously had a uint16_t underflow path when no cells
+// were connected (Vmax=0, Vmin=UINT16_MAX -> Vmax-Vmin=1). Fixed
+// in this fork by an early return when connected_mask == 0.
 bool is_calibration_required(uint16_t connected_mask,
                              const uint16_t* cell_voltages,
                              uint8_t max_cells,

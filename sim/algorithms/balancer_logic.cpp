@@ -25,6 +25,8 @@ bool is_calibration_required(uint16_t connected_mask,
                              uint8_t max_cells,
                              uint16_t balancer_error)
 {
+    if (connected_mask == 0) return false;
+
     uint16_t Vmin = UINT16_MAX;
     uint16_t Vmax = 0;
     for (uint8_t i = 0; i < max_cells; ++i) {
@@ -34,8 +36,6 @@ bool is_calibration_required(uint16_t connected_mask,
             if (vi < Vmin) Vmin = vi;
         }
     }
-    // Mirrors firmware: uint16_t subtraction. When no cells were ever
-    // considered, this underflows to 1 — see header comment.
     return static_cast<uint16_t>(Vmax - Vmin) > balancer_error;
 }
 

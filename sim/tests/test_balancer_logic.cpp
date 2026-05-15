@@ -81,26 +81,19 @@ static void test_is_calibration_required_ignores_disconnected()
     assert(is_calibration_required(0b111111, v, 6, 100) == true);
 }
 
-static void test_is_calibration_required_no_cells_connected_quirk()
+static void test_is_calibration_required_no_cells_connected_returns_false()
 {
-    // QUIRK: with mask=0, the inner loop body never runs, so
-    // Vmin=UINT16_MAX, Vmax=0. Then (Vmax - Vmin) in uint16 = 1.
+    // With no cells connected, there are no voltages to compare, so
+    // by definition no calibration is required. The early-return
+    // guard handles this cleanly for any balancer_error value.
     //
-    // For any realistic balancer_error >= 2, the function returns false.
-    // This test pins down that quirky behaviour so any refactor must
-    // either preserve it or consciously change it.
+    // (Historic note: pre-fix, the firmware had a uint16_t underflow
+    // path here that returned true when balancer_error == 0.
+    // See git history.)
     uint16_t v[6] = {0};
-
-    // balancer_error = 0 -> 1 > 0 -> TRUE (quirky outcome!)
-    assert(is_calibration_required(0, v, 6, 0) == true);
-
-    // balancer_error = 1 -> 1 > 1 -> false
-    assert(is_calibration_required(0, v, 6, 1) == false);
-
-    // balancer_error = 2 (realistic minimum) -> 1 > 2 -> false
-    assert(is_calibration_required(0, v, 6, 2) == false);
-
-    // Any realistic balancer_error -> false
+    assert(is_calibration_required(0, v, 6, 0)  == false);
+    assert(is_calibration_required(0, v, 6, 1)  == false);
+    assert(is_calibration_required(0, v, 6, 2)  == false);
     assert(is_calibration_required(0, v, 6, 50) == false);
 }
 
@@ -215,7 +208,7 @@ int main()
     test_is_calibration_required_basics();
     test_is_calibration_required_threshold();
     test_is_calibration_required_ignores_disconnected();
-    test_is_calibration_required_no_cells_connected_quirk();
+    test_is_calibration_required_no_cells_connected_returns_false();
     test_is_calibration_required_single_cell();
     test_is_calibration_required_extremes();
     test_calculate_balance_no_min_cell();

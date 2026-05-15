@@ -59,6 +59,8 @@ namespace Balancer {
 } // namespace Balancer
 
 bool Balancer::isCalibrationRequired() {
+    if(AnalogInputs::connectedBalancePortCells == 0) return false;
+
     AnalogInputs::ValueType Vmin = UINT16_MAX, Vmax = 0;
     for(uint8_t i = 0; i < MAX_BALANCE_CELLS; i++) {
         if(AnalogInputs::connectedBalancePortCells & (1<<i)) {
