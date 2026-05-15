@@ -20,12 +20,6 @@ TheveninTransitionResult thevenin_step_calc_new_i(TheveninState current,
         r.effects.zero_current = true;
         break;
 
-    case TheveninState::RthMesurment:
-        // DEAD: no incoming transition exists in firmware, but the
-        // handler is in the switch — we faithfully port it.
-        r.next_state = TheveninState::ConstantCurrentBalancing;
-        break;
-
     case TheveninState::LastRthMesurment:
         r.effects.zero_current = true;
         r.next_state           = TheveninState::LastConstantCurrent;

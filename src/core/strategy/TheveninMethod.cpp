@@ -31,9 +31,9 @@
 namespace TheveninMethod {
 
     enum State {ConstantCurrentBalancing, ConstantCurrent,
-                RthMesurment, LastRthMesurment, LastConstantCurrent, ConstantVoltageBalancing};
+                LastRthMesurment, LastConstantCurrent, ConstantVoltageBalancing};
     /* possible transitions:
-     *   RthMesurment <--> ConstantCurrentBalancing --> ConstantCurrent -->
+     *   ConstantCurrentBalancing --> ConstantCurrent -->
      *   LastRthMesurment --> LastConstantCurrent --> ConstantVoltageBalancing
      */
 
@@ -180,9 +180,6 @@ AnalogInputs::ValueType TheveninMethod::calculateNewI(bool isEndVout, AnalogInpu
             state_ = LastRthMesurment;
             //temporarily turn off
             newI_ = 0;
-            break;
-        case RthMesurment:
-            state_ = ConstantCurrentBalancing;
             break;
         case LastRthMesurment:
             newI_ = 0;

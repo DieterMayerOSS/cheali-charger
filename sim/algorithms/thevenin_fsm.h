@@ -12,7 +12,7 @@
 //
 //   [Initial]
 //      ↓
-//   ConstantCurrentBalancing  <─── (RthMesurment, dead — see below)
+//   ConstantCurrentBalancing
 //      │ isEndVout   (also fires in balance_isComplete — DUPLICATE)
 //      │ end Balancer
 //      ↓
@@ -29,11 +29,10 @@
 //      ↓
 //   ConstantVoltageBalancing  (terminal, self-loops via default:)
 //
-// DEAD STATE: RthMesurment is declared in the enum and has a handler in
-// the switch (transition → ConstantCurrentBalancing), but nothing in the
-// visible firmware ever assigns state_ = RthMesurment. The author's
-// comment "RthMesurment <--> ConstantCurrentBalancing" suggests a
-// bi-directional path that doesn't exist in the code.
+// HISTORY: an unreachable RthMesurment state used to live in the
+// enum, with a switch case that routed it back to ConstantCurrentBalancing.
+// Nothing in the firmware ever assigned state_ = RthMesurment, so the
+// case was pure dead code. Removed in this fork; see git history.
 //
 // DUPLICATE TRANSITION: ConstantCurrentBalancing → ConstantCurrent
 // fires in BOTH balance_isComplete() AND calculateNewI(). In normal
@@ -50,7 +49,6 @@ namespace cheali_sim {
 enum class TheveninState : uint8_t {
     ConstantCurrentBalancing,   // initial state, CC charge with balancing active
     ConstantCurrent,            // CC charge after balancing ended
-    RthMesurment,               // DEAD — no incoming transition exists
     LastRthMesurment,           // final Rth probe before CV
     LastConstantCurrent,        // final CC step
     ConstantVoltageBalancing,   // terminal CV phase

@@ -42,19 +42,6 @@ static void test_cc_transitions_to_last_rth_with_zero_current()
     assert(r.effects.end_balancing == false);
 }
 
-static void test_dead_state_rth_mesurment_transitions_unconditionally()
-{
-    // RthMesurment has no incoming transition in firmware, but if it
-    // somehow occurred (e.g. RAM corruption), the handler routes it
-    // back to ConstantCurrentBalancing unconditionally.
-    auto r_true  = thevenin_step_calc_new_i(TheveninState::RthMesurment, true);
-    auto r_false = thevenin_step_calc_new_i(TheveninState::RthMesurment, false);
-    assert(r_true.next_state  == TheveninState::ConstantCurrentBalancing);
-    assert(r_false.next_state == TheveninState::ConstantCurrentBalancing);
-    assert(r_true.effects.zero_current == false);
-    assert(r_true.effects.end_balancing == false);
-}
-
 static void test_last_rth_unconditional_with_zero_current()
 {
     auto r_true  = thevenin_step_calc_new_i(TheveninState::LastRthMesurment, true);
@@ -210,7 +197,6 @@ int main()
     test_cc_balancing_transitions_to_cc_on_end_vout();
     test_cc_stays_when_not_end_vout();
     test_cc_transitions_to_last_rth_with_zero_current();
-    test_dead_state_rth_mesurment_transitions_unconditionally();
     test_last_rth_unconditional_with_zero_current();
     test_last_cc_stays_when_not_end_vout();
     test_last_cc_transitions_to_cv_on_end_vout();
@@ -226,6 +212,6 @@ int main()
     test_duplicate_cc_balancing_to_cc_transition_in_sequence();
     test_full_charge_sequence();
 
-    std::puts("test_thevenin_fsm: OK (15 cases)");
+    std::puts("test_thevenin_fsm: OK (14 cases)");
     return 0;
 }
