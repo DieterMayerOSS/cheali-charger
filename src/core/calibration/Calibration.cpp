@@ -61,6 +61,7 @@ void run()
     SerialLog::powerOn();
 
     Menu::runStatic(optionsStaticMenu);
+    check();
 
     SerialLog::powerOff();
     Program::programState = Program::Done;

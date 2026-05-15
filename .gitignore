@@ -26,3 +26,6 @@ build_ubuntu.sh
 # sim/ host-build artifacts
 sim/build/
 
+# Out-of-tree AVR firmware build
+build-avr/
+
