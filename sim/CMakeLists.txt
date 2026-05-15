@@ -19,6 +19,7 @@ add_library(sim_algorithms STATIC
     algorithms/charge_strategy_decisions.cpp
     algorithms/monitor_safety.cpp
     algorithms/calibration.cpp
+    algorithms/thevenin_fsm.cpp
 )
 target_include_directories(sim_algorithms PUBLIC algorithms)
 
@@ -51,3 +52,7 @@ add_test(NAME monitor_safety COMMAND test_monitor_safety)
 add_executable(test_calibration tests/test_calibration.cpp)
 target_link_libraries(test_calibration PRIVATE sim_algorithms)
 add_test(NAME calibration COMMAND test_calibration)
+
+add_executable(test_thevenin_fsm tests/test_thevenin_fsm.cpp)
+target_link_libraries(test_thevenin_fsm PRIVATE sim_algorithms)
+add_test(NAME thevenin_fsm COMMAND test_thevenin_fsm)
