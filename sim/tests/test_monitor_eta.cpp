@@ -102,56 +102,54 @@ static void test_eta_state_unchanged_when_no_percent_change()
     assert(s.etaDeltaSec      == 7);
 }
 
-static void test_monitor_eta_bug_subtraction_order()
+static void test_eta_records_elapsed_time_on_first_percent_jump()
 {
-    // FIRMWARE BUG (preserved): line 66 of Monitor.cpp computes
-    //     etaSec = etaStartTimeCalc - getTimeSec()
-    // which is reversed. With etaStartTimeCalc < getTimeSec(),
-    // uint32_t underflow produces ~UINT32_MAX.
+    // First percent jump at t=30. With the corrected subtraction
+    // (getTimeSec - etaStartTimeCalc), etaSec = 30 - 0 = 30.
+    // This is the time the 0%->1% step took.
     //
-    // Scenario: charge starts at t=0 with etaStartTimeCalc=0, percent=0.
-    // First percent jump happens at t=30 (got from 0% to 1%).
-    // Firmware computes etaSec = 0 - 30 = UINT32_MAX - 29.
-    // Then etaDeltaSec is set to that huge value.
+    // (Historic note: the firmware originally had the operands
+    // reversed, producing UINT32_MAX-29 instead. Pre-fix tests
+    // asserted that value here — see git history.)
     EtaState s;
     update_eta_state(s, /*current_percent=*/1, /*time_sec=*/30);
 
-    // procent_ advanced
-    assert(s.procent_ == 1);
-    // etaStartTimeCalc updated to current time AFTER the bogus subtraction
+    assert(s.procent_         == 1);
     assert(s.etaStartTimeCalc == 30);
-    // etaDeltaSec corrupted by the underflow
-    assert(s.etaDeltaSec == UINT32_MAX - 29);
+    assert(s.etaDeltaSec      == 30);
 
-    // The displayed ETA is now garbage:
-    // (UINT32_MAX - 29) * (105 - 1) silently overflows uint32_t
+    // Plausible ETA: 30 s/percent * (105 - 1) = 3120 s
     uint32_t eta = compute_eta_time(s, /*balance_port_connected=*/true);
-    // We don't pin the wrapped value (it's UB-ish); we just assert it
-    // is *not* a plausible "time remaining" — namely, not equal to
-    // the intuitive "(60 - 0) * (105 - 1) / 60 = 104 minutes" or
-    // anything close.
-    // If the bug were fixed (subtraction in correct order), etaDeltaSec
-    // would be 30 and eta would be 30 * 104 = 3120. We assert it's NOT
-    // that, to make sure the bug is genuinely present.
-    assert(eta != 30 * 104);
+    assert(eta == 30 * 104);
 }
 
-static void test_monitor_eta_bug_persists_on_subsequent_percents()
+static void test_eta_stays_pessimistic_when_subsequent_jumps_are_faster()
 {
-    // Second percent jump after the first. etaStartTimeCalc now holds
-    // 30 (set during the previous call). At t=60, percent 1->2:
-    //   etaSec = 30 - 60 = UINT32_MAX - 29 (same underflow, same value)
-    //   etaSec > etaDeltaSec? UINT32_MAX-29 > UINT32_MAX-29 is FALSE,
-    //   so etaDeltaSec stays at UINT32_MAX-29.
+    // Second jump happened FASTER (45-30 = 15 s) than the first (30 s).
+    // The "find longer time for deltaprocent" branch is gated on
+    // etaSec > etaDeltaSec, so etaDeltaSec stays at the slower value.
+    // This is the pessimistic-by-design behaviour: ETA never shrinks
+    // based on a single faster percent.
     EtaState s;
-    update_eta_state(s, 1, 30);                         // first jump
-    uint32_t delta_after_first = s.etaDeltaSec;
-
-    update_eta_state(s, 2, 60);                         // second jump
+    update_eta_state(s, 1, 30);   // first jump, 30 s
+    update_eta_state(s, 2, 45);   // second jump, 15 s
 
     assert(s.procent_         == 2);
-    assert(s.etaStartTimeCalc == 60);
-    assert(s.etaDeltaSec      == delta_after_first);    // unchanged
+    assert(s.etaStartTimeCalc == 45);
+    assert(s.etaDeltaSec      == 30);  // kept the slower step
+}
+
+static void test_eta_grows_when_subsequent_jump_is_slower()
+{
+    // Second jump took LONGER (90-30 = 60 s) than the first (30 s).
+    // etaDeltaSec is updated to the new slower value.
+    EtaState s;
+    update_eta_state(s, 1, 30);
+    update_eta_state(s, 2, 90);
+
+    assert(s.procent_         == 2);
+    assert(s.etaStartTimeCalc == 90);
+    assert(s.etaDeltaSec      == 60);  // grew to slower step
 }
 
 int main()
@@ -167,9 +165,10 @@ int main()
     test_eta_time_shrinks_with_progress();
 
     test_eta_state_unchanged_when_no_percent_change();
-    test_monitor_eta_bug_subtraction_order();
-    test_monitor_eta_bug_persists_on_subsequent_percents();
+    test_eta_records_elapsed_time_on_first_percent_jump();
+    test_eta_stays_pessimistic_when_subsequent_jumps_are_faster();
+    test_eta_grows_when_subsequent_jump_is_slower();
 
-    std::puts("test_monitor_eta: OK (11 cases)");
+    std::puts("test_monitor_eta: OK (12 cases)");
     return 0;
 }

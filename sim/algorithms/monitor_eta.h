@@ -42,20 +42,14 @@ struct EtaState {
 // Port of Monitor::calculateDeltaProcentTimeSec().
 //
 // Called every cycle. If the charge percent has just incremented since
-// the last call, the firmware tries to record how long that took and
-// keeps the maximum observed interval (pessimistic ETA — the model
-// assumes future percents won't go faster than the slowest one seen).
+// the last call, records how long that took and keeps the maximum
+// observed interval (pessimistic ETA — the model assumes future
+// percents won't go faster than the slowest one seen).
 //
-// BUG preserved verbatim: the firmware writes
-//     etaSec = etaStartTimeCalc - getTimeSec();
-// which is reversed. etaStartTimeCalc is a *past* timestamp, getTimeSec()
-// returns the current elapsed seconds — so past - present is negative,
-// and in uint32_t this underflows to ~UINT32_MAX. The "etaSec > etaDeltaSec"
-// check then almost always succeeds, blowing etaDeltaSec up to absurd values.
-// The displayed ETA has been broken since ~2013. Nobody noticed because
-// the UI element is rarely trusted on these chargers.
-//
-// See test_monitor_eta_bug_subtraction_order for the pin-down test.
+// HISTORY: the firmware originally had a reversed subtraction
+// (etaStartTimeCalc - getTimeSec()) that underflowed uint32_t and
+// blew etaDeltaSec up to ~UINT32_MAX, making the displayed ETA
+// garbage from ~2013 until the fix in this fork.
 void update_eta_state(EtaState& state,
                       uint8_t current_percent,
                       uint32_t time_sec);

@@ -63,7 +63,7 @@ void Monitor::calculateDeltaProcentTimeSec()
     uint8_t procent = Monitor::getChargeProcent();
     if(procent_ < procent) {
         procent_ = procent;
-        etaSec = Monitor::etaStartTimeCalc-Monitor::getTimeSec();
+        etaSec = Monitor::getTimeSec() - Monitor::etaStartTimeCalc;
         etaStartTimeCalc = Monitor::getTimeSec();
         if (etaSec > etaDeltaSec)  {
             etaDeltaSec=etaSec; // find longer time for deltaprocent

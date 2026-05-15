@@ -33,14 +33,8 @@ void update_eta_state(EtaState& state,
 {
     if (state.procent_ < current_percent) {
         state.procent_ = current_percent;
-
-        // BUG preserved verbatim — subtraction is reversed.
-        // Should be (time_sec - state.etaStartTimeCalc) to get the
-        // elapsed interval; firmware writes the operands the other way.
-        uint32_t etaSec = state.etaStartTimeCalc - time_sec;
-
+        uint32_t etaSec = time_sec - state.etaStartTimeCalc;
         state.etaStartTimeCalc = time_sec;
-
         if (etaSec > state.etaDeltaSec) {
             state.etaDeltaSec = etaSec;  // "find longer time for deltaprocent"
         }
