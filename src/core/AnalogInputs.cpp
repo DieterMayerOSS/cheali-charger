@@ -309,6 +309,7 @@ AnalogInputs::ValueType AnalogInputs::calibrateValue(Name name, ValueType x)
     CalibrationPoint p0, p1;
     getCalibrationPoint(p0, name, 0);
     getCalibrationPoint(p1, name, 1);
+    if (p0.x == p1.x) return 0;   // degenerate calibration -> safe zero
     int32_t y,a;
     y  = p1.y; y -= p0.y;
     a  =  x;   a -= p0.x;
@@ -329,6 +330,7 @@ AnalogInputs::ValueType AnalogInputs::reverseCalibrateValue(Name name, ValueType
     CalibrationPoint p0, p1;
     getCalibrationPoint(p0, name, 0);
     getCalibrationPoint(p1, name, 1);
+    if (p0.y == p1.y) return 0;   // degenerate calibration -> safe zero
     int32_t x,a;
     x  = p1.x; x -= p0.x;
     a  =  y;   a -= p0.y;

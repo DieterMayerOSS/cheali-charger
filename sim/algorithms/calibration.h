@@ -17,9 +17,13 @@
 //      the origin.
 //   2. Results are clamped to [0, UINT16_MAX] — no monotonicity check.
 //      If p0.y and p1.y are accidentally swapped, the function silently
-//      produces an inverted mapping.
-//   3. p0.x == p1.x causes division by zero (UB). Caller must ensure
-//      distinct x coordinates.
+//      produces an inverted mapping. This is INTENTIONAL: some sensors
+//      (NTC thermistors in a voltage-divider) legitimately have a
+//      negative slope. UI-level plausibility checks belong in the
+//      calibration menu, not here.
+//   3. Degenerate calibration (p0.x == p1.x for calibrate, or
+//      p0.y == p1.y for reverse) returns 0 as a safe zero. Previously
+//      these were division-by-zero UB; guarded in this fork.
 //   4. Integer division truncates. Combined with the two-point fit,
 //      this means midrange readings on non-linear sensors (high-current
 //      shunts on the 400W class chargers) drift several percent from

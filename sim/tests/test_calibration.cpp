@@ -121,6 +121,28 @@ static void test_round_trip()
     }
 }
 
+static void test_calibrate_degenerate_x_returns_zero()
+{
+    // Both calibration points have the same ADC value -> calibration is
+    // ambiguous (two real values for the same reading). Guard returns 0.
+    CalibrationPoint p0{500, 1000};
+    CalibrationPoint p1{500, 5000};
+    assert(calibrate_value(500, p0, p1) == 0);
+    assert(calibrate_value(100, p0, p1) == 0);
+    assert(calibrate_value(1000, p0, p1) == 0);
+}
+
+static void test_reverse_degenerate_y_returns_zero()
+{
+    // Both calibration points have the same real value -> reverse map
+    // is ambiguous. Guard returns 0.
+    CalibrationPoint p0{100, 3000};
+    CalibrationPoint p1{500, 3000};
+    assert(reverse_calibrate_value(3000, p0, p1) == 0);
+    assert(reverse_calibrate_value(1000, p0, p1) == 0);
+    assert(reverse_calibrate_value(5000, p0, p1) == 0);
+}
+
 static void test_reverse_clamps()
 {
     // y far above p1.y -> x extrapolates beyond p1.x; clamped at UINT16_MAX
@@ -146,11 +168,14 @@ int main()
     test_calibrate_inverted_calibration_silently_inverts();
     test_calibrate_integer_truncation_midrange();
 
+    test_calibrate_degenerate_x_returns_zero();
+
     test_reverse_zero_short_circuits();
     test_reverse_hits_anchors();
     test_round_trip();
     test_reverse_clamps();
+    test_reverse_degenerate_y_returns_zero();
 
-    std::puts("test_calibration: OK (11 cases)");
+    std::puts("test_calibration: OK (13 cases)");
     return 0;
 }
