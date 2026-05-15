@@ -35,4 +35,34 @@ bool is_calibration_required(uint16_t connected_mask,
                              uint8_t max_cells,
                              uint16_t balancer_error);
 
+// Port of Balancer::calculateBalance().
+// Returns a bitmask of cells that need discharging during balancing —
+// every connected cell whose voltage is strictly greater than the
+// voltage at min_cell_index.
+//
+// Returns 0 if min_cell_index < 0 (firmware sentinel meaning "no min
+// cell has been picked yet"). Caller must ensure min_cell_index is
+// either negative or within [0, max_cells); the firmware doesn't
+// bounds-check the lookup either.
+uint16_t calculate_balance(int8_t min_cell_index,
+                           uint16_t connected_mask,
+                           const uint16_t* cell_voltages,
+                           uint8_t max_cells);
+
+// Port of Balancer::isMaxVout().
+// Returns true iff any connected cell's voltage is >= max_v.
+// Used to detect "any cell reached the upper voltage limit".
+bool is_max_vout(uint16_t connected_mask,
+                 const uint16_t* cell_voltages,
+                 uint8_t max_cells,
+                 uint16_t max_v);
+
+// Port of Balancer::isMinVout().
+// Returns true iff any connected cell's voltage is <= min_v.
+// Used to detect "any cell hit the discharge cutoff".
+bool is_min_vout(uint16_t connected_mask,
+                 const uint16_t* cell_voltages,
+                 uint8_t max_cells,
+                 uint16_t min_v);
+
 }  // namespace cheali_sim

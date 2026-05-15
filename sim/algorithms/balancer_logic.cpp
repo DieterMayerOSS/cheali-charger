@@ -39,4 +39,52 @@ bool is_calibration_required(uint16_t connected_mask,
     return static_cast<uint16_t>(Vmax - Vmin) > balancer_error;
 }
 
+uint16_t calculate_balance(int8_t min_cell_index,
+                           uint16_t connected_mask,
+                           const uint16_t* cell_voltages,
+                           uint8_t max_cells)
+{
+    if (min_cell_index < 0) return 0;
+
+    uint16_t vmin = cell_voltages[min_cell_index];
+    uint16_t retu = 0;
+    uint16_t cell_bit = 1;
+    for (uint8_t c = 0; c < max_cells; ++c) {
+        if (connected_mask & cell_bit) {
+            uint16_t v = cell_voltages[c];
+            if (v > vmin) {
+                retu |= cell_bit;
+            }
+        }
+        cell_bit <<= 1;
+    }
+    return retu;
+}
+
+bool is_max_vout(uint16_t connected_mask,
+                 const uint16_t* cell_voltages,
+                 uint8_t max_cells,
+                 uint16_t max_v)
+{
+    for (uint8_t c = 0; c < max_cells; ++c) {
+        if (connected_mask & (1u << c)) {
+            if (cell_voltages[c] >= max_v) return true;
+        }
+    }
+    return false;
+}
+
+bool is_min_vout(uint16_t connected_mask,
+                 const uint16_t* cell_voltages,
+                 uint8_t max_cells,
+                 uint16_t min_v)
+{
+    for (uint8_t c = 0; c < max_cells; ++c) {
+        if (connected_mask & (1u << c)) {
+            if (cell_voltages[c] <= min_v) return true;
+        }
+    }
+    return false;
+}
+
 }  // namespace cheali_sim
