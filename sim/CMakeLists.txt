@@ -17,6 +17,7 @@ add_library(sim_algorithms STATIC
     algorithms/balancer_logic.cpp
     algorithms/monitor_eta.cpp
     algorithms/charge_strategy_decisions.cpp
+    algorithms/monitor_safety.cpp
 )
 target_include_directories(sim_algorithms PUBLIC algorithms)
 
@@ -41,3 +42,7 @@ add_test(NAME monitor_eta COMMAND test_monitor_eta)
 add_executable(test_charge_strategy_decisions tests/test_charge_strategy_decisions.cpp)
 target_link_libraries(test_charge_strategy_decisions PRIVATE sim_algorithms)
 add_test(NAME charge_strategy_decisions COMMAND test_charge_strategy_decisions)
+
+add_executable(test_monitor_safety tests/test_monitor_safety.cpp)
+target_link_libraries(test_monitor_safety PRIVATE sim_algorithms)
+add_test(NAME monitor_safety COMMAND test_monitor_safety)
