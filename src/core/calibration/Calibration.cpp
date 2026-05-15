@@ -148,6 +148,15 @@ bool checkAll() {
         return false;
     }
 
+    for(uint8_t c = 0; c < MAX_BALANCE_CELLS; c++) {
+        AnalogInputs::Name pin = AnalogInputs::Name(AnalogInputs::Vb1_pin + c);
+        error = check(pin, ANALOG_VOLT(1.000), ANALOG_VOLT(4.000));
+        if(error) {
+            Screen::runCalibrationError(string_voltage, error);
+            return false;
+        }
+    }
+
     return true;
 }
 

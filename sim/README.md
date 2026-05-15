@@ -57,6 +57,13 @@ behaviour. See the relevant commit message for context.
    was only invoked from `Program::run`, so users only saw the error
    when they tried to start a charge program. Now also runs on
    calibration menu exit, giving immediate feedback.
+6. **Per-cell calibration not validated** — `Calibration::checkAll()`
+   previously only checked the total-pack pin (`Vout_plus_pin`) and
+   current channels, leaving the individual cell pins (`Vb1_pin`..
+   `Vb6_pin`) silently accepted even with degenerate calibration.
+   Now loops over `MAX_BALANCE_CELLS` and validates each with a
+   1–4 V range. `Vb0_pin` is intentionally not checked (factory
+   defaults leave it uncalibrated).
 
 ## Findings documented but deliberately NOT fixed
 
