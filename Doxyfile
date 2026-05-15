@@ -1,0 +1,44 @@
+# Minimal Doxyfile for cheali-charger.
+#
+# Selective documentation: only the public-API headers that have been
+# annotated. To extend coverage, add more headers to INPUT below.
+# Defaults are used for everything not overridden here.
+
+PROJECT_NAME           = "cheali-charger"
+PROJECT_NUMBER         = "2.02"
+PROJECT_BRIEF          = "Open-source firmware for LiPo chargers"
+
+OUTPUT_DIRECTORY       = docs-doxygen
+GENERATE_HTML          = YES
+HTML_OUTPUT            = html
+GENERATE_LATEX         = NO
+
+# Annotated public-API headers only. Add to this list when you document
+# additional headers.
+INPUT                  = src/core/AnalogInputs.h \
+                         src/core/strategy/Strategy.h \
+                         src/core/calibration/Calibration.h
+RECURSIVE              = NO
+
+# Extract entities even without doc-comments — the limited INPUT path
+# already bounds the surface, and listing undocumented entries makes it
+# obvious where to expand annotation next.
+EXTRACT_ALL            = YES
+EXTRACT_PRIVATE        = NO
+EXTRACT_STATIC         = NO
+WARN_IF_UNDOCUMENTED   = NO
+
+ENABLE_PREPROCESSING   = YES
+MACRO_EXPANSION        = YES
+PREDEFINED             = MAX_BALANCE_CELLS=6 \
+                         CHEALI_EEPROM_PACKED= \
+                         ANALOG_VOLT(x)=
+
+# Graphviz for inheritance / collaboration diagrams (we installed it
+# alongside doxygen).
+HAVE_DOT               = YES
+CALL_GRAPH             = NO
+CALLER_GRAPH           = NO
+
+QUIET                  = YES
+WARN_NO_PARAMDOC       = NO

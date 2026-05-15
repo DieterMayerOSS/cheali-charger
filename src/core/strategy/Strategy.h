@@ -22,25 +22,55 @@
 #include "AnalogInputs.h"
 #include "ProgramData.h"
 
+/**
+ * @brief Strategy-pattern dispatcher for charge / discharge / balance / storage / etc.
+ *
+ * Each concrete strategy (SimpleChargeStrategy, TheveninChargeStrategy,
+ * DeltaChargeStrategy, Balancer, Discharger, StorageStrategy, ...) provides
+ * a VTable kept in flash (PROGMEM) and the active strategy pointer is
+ * stored in Strategy::strategy.
+ *
+ * The strategy reads its per-run parameters (target voltage, current
+ * limits, balance flag) from the namespace-scope variables endV, maxI,
+ * minI, doBalance — these are set up by Strategy::setVI() before
+ * Strategy::doStrategy() is invoked.
+ */
 namespace Strategy {
+    /// Result of one strategy cycle. RUNNING = continue; COMPLETE = success
+    /// (e.g. capacity reached); ERROR = abort (e.g. safety check failed).
     enum statusType {ERROR, COMPLETE, RUNNING };
+
+    /// Function-pointer dispatch table for a concrete strategy.
+    /// Stored in PROGMEM (Flash) to save the ~6 bytes of RAM that
+    /// a virtual class would otherwise need on AVR.
     struct VTable {
-        void (*powerOn)();
-        void (*powerOff)();
-        statusType (*doStrategy)();
+        void (*powerOn)();                ///< invoked when this strategy is selected
+        void (*powerOff)();               ///< invoked when this strategy ends or is replaced
+        statusType (*doStrategy)();       ///< called every cycle; returns status
     };
 
-    //variables common to all Strategies
-    extern AnalogInputs::ValueType endV;
-    extern AnalogInputs::ValueType maxI;
-    extern AnalogInputs::ValueType minI;
-    extern bool doBalance;
+    extern AnalogInputs::ValueType endV;  ///< target voltage for the current run
+    extern AnalogInputs::ValueType maxI;  ///< upper current limit
+    extern AnalogInputs::ValueType minI;  ///< termination threshold (charge ends when I drops below this)
+    extern bool doBalance;                ///< whether the balancer should run alongside
 
+    /**
+     * @brief Populate endV / maxI / minI from a ProgramData voltage type.
+     * @param vt    which voltage profile to use (e.g. VCharged, VDischarged)
+     * @param charge true to load charge limits (Ic / minIc), false for discharge
+     */
     void setVI(ProgramData::VoltageType vt, bool charge);
 
-    extern const VTable * strategy;
-    extern bool exitImmediately;
+    extern const VTable * strategy;       ///< currently active strategy (PROGMEM ptr)
+    extern bool exitImmediately;          ///< if true, return without waiting on COMPLETE
 
+    /**
+     * @brief Main strategy event loop.
+     *
+     * Powers on the active strategy, then drives keyboard polling, screen
+     * updates, monitor safety checks and strategy-specific logic until
+     * COMPLETE / ERROR or the user presses STOP. Powers off on exit.
+     */
     statusType doStrategy();
 };
 

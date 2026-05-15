@@ -29,3 +29,6 @@ sim/build/
 # Out-of-tree AVR firmware build
 build-avr/
 
+# Doxygen-generated documentation
+docs-doxygen/
+
