@@ -28,6 +28,7 @@
 #include "ProgramDCcycle.h"
 #include "Monitor.h"
 #include "PolarityCheck.h"
+#include "Keyboard.h"
 #include "ScreenCycle.h"
 
 //TODO: remove constant: 10 (move to #define)
@@ -43,11 +44,43 @@ namespace Screen { namespace Cycle {
 
 void Screen::Cycle::displayCycles()
 {
-    uint8_t c, time = Blink::blinkTime_/8;
-    uint8_t all_scr = ProgramDCcycle::currentCycle/2 + 1;
-    c = time % all_scr;
+    // Manual vs auto scrolling. The static state survives across page
+    // navigation, so the user can leave the page and return to the same
+    // cycle they were viewing. Long-press of START while on this page
+    // toggles the mode; in manual mode Inc/Dec scrolls cycles (and the
+    // events are consumed so they don't also advance pageNr_); the
+    // cycle digit blinks to indicate manual mode is active.
+    static uint8_t c = 0;
+    static bool manualMode = false;
+
+    const uint8_t time     = Blink::blinkTime_ / 8;
+    const uint8_t lastCycleIdx = ProgramDCcycle::currentCycle / 2;
+    const uint8_t all_scr  = lastCycleIdx + 1;
+
+    if(Screen::keyboardButton == BUTTON_START && Keyboard::isLongPressTime()) {
+        manualMode = !manualMode;
+        Screen::keyboardButton = BUTTON_NONE;
+    }
+
+    if(manualMode) {
+        if(Screen::keyboardButton == BUTTON_DEC && c > 0) {
+            c--;
+            Screen::keyboardButton = BUTTON_NONE;
+        } else if(Screen::keyboardButton == BUTTON_INC && c < lastCycleIdx) {
+            c++;
+            Screen::keyboardButton = BUTTON_NONE;
+        }
+        if(c > lastCycleIdx) c = lastCycleIdx;
+    } else {
+        c = time % all_scr;
+    }
+
     lcdSetCursor0_0();
-    lcdPrintUnsigned(c+1, 1);
+    if(manualMode && (Blink::blinkTime_ & 0x10)) {
+        lcdPrintChar(' ');
+    } else {
+        lcdPrintUnsigned(c+1, 1);
+    }
     lcdPrintChar(SCREEN_EMPTY_CELL_CHAR);
     lcdPrintTime(cyclesHistoryTime[c*2], 6);
     lcdPrintSpace1();
