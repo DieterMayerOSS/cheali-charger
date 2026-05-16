@@ -211,7 +211,18 @@ void Screen::runAskResetEeprom(uint8_t what)
     lcdPrintUInt(what);
     lcdSetCursor0_1();
     lcdPrint_P(PSTR("            yes"));
-    while (waitButtonPressed() != BUTTON_START);
+    // Confirm-or-timeout. Original behaviour blocked forever on
+    // waitButtonPressed != BUTTON_START — fine when a human is at the
+    // charger, bad for unattended / headless boot. The user can still
+    // press START to acknowledge sooner; otherwise default to "yes"
+    // after 60 seconds.
+    const uint16_t SCREEN_EEPROM_RESET_TIMEOUT_S = 60;
+    uint16_t startTime = Time::getSecondsU16();
+    while (Keyboard::getPressedWithDelay() != BUTTON_START) {
+        if (Time::diffU16(startTime, Time::getSecondsU16()) > SCREEN_EEPROM_RESET_TIMEOUT_S) {
+            break;
+        }
+    }
 }
 
 void Screen::displayResettingEeprom()

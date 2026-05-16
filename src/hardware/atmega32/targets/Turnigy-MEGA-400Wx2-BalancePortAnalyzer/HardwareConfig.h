@@ -31,6 +31,9 @@
 #define MAX_DISCHARGE_P         ANALOG_WATT(25.000)
 #define MAX_DISCHARGE_I         ANALOG_AMP(5.000)
 
+// See Turnigy-MEGA-400Wx2/HardwareConfig.h for the /2 rationale —
+// matches the main build so this helper firmware behaves identically
+// on the same PCB.
 #define SMPS_UPPERBOUND_VALUE               (TIMER1_PRECISION_PERIOD/2)
 #define DISCHARGER_UPPERBOUND_VALUE         TIMER1_PRECISION_PERIOD
 #define ADC_KEY_BORDER 128

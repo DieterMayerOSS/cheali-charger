@@ -36,6 +36,11 @@
 #define MAX_DISCHARGE_I         ANALOG_AMP(5.000)
 
 
+// Half-resolution PWM duty for the 400W class: doubles the PWM frequency
+// vs. TIMER1_PRECISION_PERIOD (used by 50W/200W targets), at the cost of
+// halving the duty-cycle granularity. The higher switching frequency
+// keeps the SMPS inductor / output ripple within spec for the larger
+// power envelope.
 #define SMPS_UPPERBOUND_VALUE               (TIMER1_PRECISION_PERIOD/2)
 #define DISCHARGER_UPPERBOUND_VALUE         TIMER1_PRECISION_PERIOD
 #define ADC_KEY_BORDER 128
