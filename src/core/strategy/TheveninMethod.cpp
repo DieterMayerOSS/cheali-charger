@@ -106,6 +106,16 @@ void TheveninMethod::initialize(bool charge)
 bool TheveninMethod::balance_isComplete(bool isEndVout, AnalogInputs::ValueType I)
 {
     if(Strategy::doBalance) {
+        // The CC_Balancing -> CC transition below is also performed by
+        // the switch in calculateNewI(). In normal operation
+        // balance_isComplete runs first (called from
+        // TheveninChargeStrategy::doStrategy before calculateNewI), so
+        // by the time calculateNewI's switch sees state_ it's usually
+        // already ConstantCurrent and that case is a no-op. The
+        // duplication is intentional: if balance_isComplete is ever
+        // skipped (e.g. a refactor that gates it on doBalance), the
+        // calculateNewI path is the safety net. See sim/tests/test_thevenin_fsm.cpp
+        // for pin-down tests of the sequence semantics.
         if(isEndVout && state_ == ConstantCurrentBalancing) {
             Balancer::endBalancing();
             state_ = ConstantCurrent;

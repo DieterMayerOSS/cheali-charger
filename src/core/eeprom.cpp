@@ -71,6 +71,11 @@ namespace eeprom {
 
     void restoreDefault(uint8_t what) {
         Screen::runAskResetEeprom(what);
+        // Cascade: each EEPROM section depends on the one above it, so a
+        // reset of an earlier section invalidates all later ones.
+        //   magic      -> whole layout is suspect -> reset calibration too
+        //   calibration -> programData references calibrated units
+        //   programData -> settings reference battery profiles
         if(what & EEPROM_RESTORE_MAGIC_NUMBER)  what |= EEPROM_RESTORE_CALIBRATION;
         if(what & EEPROM_RESTORE_CALIBRATION)   what |= EEPROM_RESTORE_PROGRAM_DATA;
         if(what & EEPROM_RESTORE_PROGRAM_DATA)  what |= EEPROM_RESTORE_SETTINGS;
@@ -97,6 +102,7 @@ namespace eeprom {
 
 #ifdef ENABLE_EEPROM_CRC
 
+    // CRC-16 IBM-3740 / Modbus variant (polynomial 0xA001, init 0xFFFF).
     inline uint16_t crc16_update(uint16_t crc, uint8_t a) {
         uint8_t i;
         crc ^= a;

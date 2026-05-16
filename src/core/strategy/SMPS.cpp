@@ -35,9 +35,13 @@
 #define SMPS_MAX_CURRENT_CHANGE_dM  ((AnalogInputs::ValueType)(SMPS_MAX_CURRENT_CHANGE*0.7))
 
 namespace SMPS {
-    bool on_ = false;
-    uint16_t value_;
-    AnalogInputs::ValueType IoutSet_;
+    // volatile because value_ is read by Monitor::doSlowInterrupt (ISR
+    // context) via isWorking(). The other two are main-thread-only today
+    // but marking them consistently lets future code add ISR readers
+    // without inheriting a silent race.
+    volatile bool on_ = false;
+    volatile uint16_t value_;
+    volatile AnalogInputs::ValueType IoutSet_;
 
     bool isPowerOn()    { return on_; }
     bool isWorking()    { return value_ != 0; }
