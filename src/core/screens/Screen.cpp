@@ -149,7 +149,15 @@ namespace Screen {
 
 void Screen::displayScreenProgramCompleted()
 {
-    screenEnd(PSTR("complete:"));
+    // Freeze layout: keep showing the final battery V + output I together
+    // with elapsed time, so the user can see the actual end state of the
+    // pack instead of just a one-shot "complete:" toast that disappears.
+    lcdSetCursor0_0();
+    AnalogInputs::printRealValue(AnalogInputs::VoutBalancer, 7);
+    AnalogInputs::printRealValue(AnalogInputs::Iout, 8);
+    lcdSetCursor0_1();
+    lcdPrint_P(PSTR("complete:"));
+    lcdPrintTime(Monitor::getTimeSec(), 7);
 }
 
 void Screen::displayMonitorError()

@@ -78,9 +78,18 @@ namespace Strategy {
 
     void chargingComplete() {
         chargingEnd();
-        Screen::displayScreenProgramCompleted();
         Buzzer::soundProgramComplete();
-        waitButtonOrDisableOutput();
+        // Loop the V/I+time end screen so values refresh while we wait
+        // for the user to acknowledge. Also handles the same timeout-
+        // disable-output behaviour as waitButtonOrDisableOutput().
+        uint16_t startTime = Time::getSecondsU16();
+        do {
+            Screen::displayScreenProgramCompleted();
+            if(Time::diffU16(startTime, Time::getSecondsU16()) > STRATEGY_DISABLE_OUTPUT_AFTER_SECONDS) {
+                AnalogInputs::powerOff();
+            }
+        } while(Keyboard::getPressedWithDelay() == BUTTON_NONE);
+        Buzzer::soundOff();
     }
 
     void chargingMonitorError() {
