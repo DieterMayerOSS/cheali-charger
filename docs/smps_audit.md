@@ -102,6 +102,12 @@ Observations:
 No bug per se, but the rate-limit is undocumented and surprising. A
 short comment block in `SMPS.cpp` explaining the rationale would help.
 
+**Historical credit:** the "smooth current rising/falling to protect power
+supplies" was one of the features added by [njozsef's 2015 fork](https://github.com/njozsef/cheali-charger-test1)
+(`cheali-charger-test1`) and was subsequently merged into upstream. The
+fork itself is marked obsolete by its author today, but the rate-limit
+mechanism we see in current `SMPS.cpp` traces back there.
+
 ### 3. PWM resolution / frequency — not visible from SMPS.cpp
 
 The actual PWM hardware setup is in `hardware::setChargerValue(value_)`,
