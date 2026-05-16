@@ -23,8 +23,8 @@ cmake_install.cmake
 src/core/Version.h
 build_ubuntu.sh
 
-# sim/ host-build artifacts
-sim/build/
+# sim/ host-build artifacts (covers build/, build-cpp23/, build-debug/, ...)
+sim/build*/
 
 # Out-of-tree AVR firmware build
 build-avr/
