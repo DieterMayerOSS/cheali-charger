@@ -29,7 +29,10 @@ namespace SMPS {
     bool isPowerOn();
     bool isWorking();
 
-    //returns the truly set Iout
+    // Returns the currently programmed setpoint (last value passed to
+    // trySetIout, after clamping + rate-limiting). This is the *commanded*
+    // current, NOT the measured current — for that, use
+    // AnalogInputs::getIout() instead.
     AnalogInputs::ValueType getIout();
     void trySetIout(AnalogInputs::ValueType I);
 

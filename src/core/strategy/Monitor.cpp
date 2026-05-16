@@ -71,17 +71,21 @@ void Monitor::calculateDeltaPercentTimeSec()
     }
 }
 
+// ETA extrapolation factor: "percent points remaining * etaDeltaSec".
+// 100 = pure linear remaining-percent (no balance phase expected).
+// 105 = adds 5 percentage points of padding to cover the
+// post-CC balancing phase that runs only when a balance port is
+// connected. Best-guess interpretation; never explicitly documented
+// in firmware history.
+static const uint8_t ETA_FACTOR_WITHOUT_BALANCE_PORT = 100;
+static const uint8_t ETA_FACTOR_WITH_BALANCE_PORT    = 105;
+
 uint32_t Monitor::getETATime()
 {
     calculateDeltaPercentTimeSec();
-    uint8_t kx = 105;
-    if(!Monitor::isBalancePortConnected) {
-        //balancer not connected
-        kx=100;
-    }
-
-    //if (getChargePercent()==99) {return (0);} //no avail more calc (or call secondary calculator)
-    return (etaDeltaSec*(kx-percent_));
+    uint8_t kx = isBalancePortConnected ? ETA_FACTOR_WITH_BALANCE_PORT
+                                        : ETA_FACTOR_WITHOUT_BALANCE_PORT;
+    return etaDeltaSec * (kx - percent_);
 }
 
 uint32_t Monitor::getTimeSec()

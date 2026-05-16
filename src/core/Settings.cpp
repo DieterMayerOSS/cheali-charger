@@ -118,6 +118,9 @@ void Settings::check() {
     if(settings.maxIc > MAX_CHARGE_I) {
         settings.maxIc = MAX_CHARGE_I;
     }
+    if(settings.maxPc > MAX_CHARGE_P) {
+        settings.maxPc = MAX_CHARGE_P;
+    }
 
     if(settings.maxId < settings.minId) {
         settings.maxId = settings.minId;

@@ -20,6 +20,14 @@
 #include "Program.h"
 #include "Settings.h"
 
+// Per-call ramp limit: how much the requested Iout is allowed to change
+// in a single trySetIout() call. Applies to BOTH soft-start (powerOn -> max)
+// and any later setpoint change (e.g. CV-tapering steps). With 200 mA and
+// the 0.7 factor below, each trySetIout() call moves Iout by up to ~140 mA.
+// The actual ramp speed is then 140 mA per call frequency.
+// Originally introduced by njozsef (cheali-charger-test1, 2015) as
+// "smooth current rising/falling to protect power supplies".
+// Override per target if a different ramp is needed.
 #ifndef SMPS_MAX_CURRENT_CHANGE
 #define SMPS_MAX_CURRENT_CHANGE     ANALOG_AMP(0.200)
 #endif
@@ -69,6 +77,12 @@ void SMPS::initialize()
     value_ = 0;
     IoutSet_ = 0;
     setValue(0);
+    // powerOff() has an early-out guard `if(!isPowerOn()) return;`, so we
+    // force on_ = true here so that the subsequent powerOff() actually runs
+    // its hardware-side teardown (setChargerOutput(false), reset rising
+    // value). Without this fake-on, the charger output relay would never
+    // be explicitly driven to OFF at boot, leaving it in whatever state
+    // the hardware initialised to.
     on_ = true;
     powerOff();
 }
