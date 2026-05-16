@@ -135,7 +135,7 @@ namespace Strategy {
             }
             if(!run && exitImmediately && status != Strategy::ERROR)
                 break;
-        } while(Screen::keyboardButton != BUTTON_STOP);
+        } while(Screen::keyboardButton != BUTTON_STOP || !Keyboard::isLongPressTime());
 
         strategyPowerOff();
         return status;
