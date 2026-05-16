@@ -26,8 +26,8 @@ build_ubuntu.sh
 # sim/ host-build artifacts (covers build/, build-cpp23/, build-debug/, ...)
 sim/build*/
 
-# Out-of-tree AVR firmware build
-build-avr/
+# Out-of-tree AVR firmware build (covers build-avr/, build-avr-rel/, ...)
+build-avr*/
 
 # Doxygen-generated documentation
 docs-doxygen/
