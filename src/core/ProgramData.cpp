@@ -266,10 +266,10 @@ void ProgramData::changedType()
 
         battery.enable_adaptiveDischarge = false;
         battery.DCRestTime = 30;
-        battery.capCutoff = 120;
     }
 
     if(isNiXX()) {
+        battery.capCutoff = 160;
         battery.enable_deltaV = true;
         if(battery.type == NiMH) {
             battery.deltaV = -ANALOG_VOLT(0.005);
@@ -280,6 +280,7 @@ void ProgramData::changedType()
         battery.deltaT = ANALOG_CELCIUS(1);
         battery.DCcycles = 5;
     } else {
+        battery.capCutoff = 120;
         battery.balancerError = ANALOG_VOLT(0.008);
         battery.Vs_per_cell = getDefaultVoltagePerCell(VStorage);
     }
