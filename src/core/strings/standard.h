@@ -29,7 +29,7 @@ namespace AnalogInputs {
     STRING(C,           "C");
     STRING(Ah,          "Ah");
     STRING(Ohm,         "\xf4");
-    STRING(procent,     "%");
+    STRING(percent,     "%");
     STRING(C_m,         "C/m");
     STRING(minutes,     "m");
     STRING(unsigned,    "");

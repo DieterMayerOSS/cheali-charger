@@ -260,7 +260,7 @@ void lcdPrintResistance(AnalogInputs::ValueType r, int8_t dig)
 
 void lcdPrintPercentage(AnalogInputs::ValueType p, int8_t dig)
 {
-    lcdPrintAnalog(p, dig, AnalogInputs::Procent);
+    lcdPrintAnalog(p, dig, AnalogInputs::Percent);
 }
 
 void lcdPrint_mV(int16_t p, int8_t dig)
@@ -288,8 +288,8 @@ static const UnitsInfo unitsInfo[] PROGMEM = {
         {ANALOG_CHARGE(1.000), true,string_Ah},
         //Resistance,
         {ANALOG_OHM(1.000), true, string_Ohm},
-        //Procent,
-        {1, false, string_procent},
+        //Percent,
+        {1, false, string_percent},
         //SignedVoltage,
         {ANALOG_VOLT(1.000), true, string_V},
         //Unsigned

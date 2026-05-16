@@ -273,8 +273,8 @@ void finalizeMeasurement()
         if(AnalogInputs::i_avrCount_ == 1) {
             AnalogInputs::i_avrSum_[AnalogInputs::Ismps]          /= ADC_I_SMPS_PER_ROUND;
         }
-        //TODO: maybe intterruptFinalizeMeasurement should be removed
-        AnalogInputs::intterruptFinalizeMeasurement();
+        //TODO: maybe interruptFinalizeMeasurement should be removed
+        AnalogInputs::interruptFinalizeMeasurement();
     }
 
 }

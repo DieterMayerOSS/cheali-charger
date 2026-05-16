@@ -43,7 +43,7 @@ namespace AnalogInputs {
         Temperature,
         Charge,
         Resistance,
-        Procent,
+        Percent,
         SignedVoltage,
         Unsigned,
         TemperatureMinutes,

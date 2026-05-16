@@ -81,7 +81,7 @@ void Screen::StartInfo::displayStartInfo()
     lcdPrintSpace1();
 
     lcdSetCursor0_1();
-    lcdPrintUnsigned(Monitor::getChargeProcent(), 2);
+    lcdPrintUnsigned(Monitor::getChargePercent(), 2);
     lcdPrint_P(PSTR("% "));
 
     int8_t bindex = Blink::getBlinkIndex();

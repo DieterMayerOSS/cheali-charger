@@ -255,7 +255,7 @@ void sendChannel1()
     printUInt(TheveninMethod::getReadableWiresRth());
     printD();
 
-    printUInt(Monitor::getChargeProcent());
+    printUInt(Monitor::getChargePercent());
     printD();
     printLong(Monitor::getETATime());
     printD();

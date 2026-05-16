@@ -107,7 +107,7 @@ namespace Strategy {
     }
 
 
-    bool analizeStrategyStatus(Strategy::statusType status) {
+    bool analyzeStrategyStatus(Strategy::statusType status) {
         if(status == Strategy::ERROR) {
             chargingMonitorError();
             return false;
@@ -125,7 +125,7 @@ namespace Strategy {
     {
         Screen::keyboardButton = BUTTON_NONE;
         bool run = true;
-        uint16_t newMesurmentData = 0;
+        uint16_t newMeasurementData = 0;
         Strategy::statusType status = Strategy::RUNNING;
         strategyPowerOn();
         do {
@@ -134,12 +134,12 @@ namespace Strategy {
 
             if(run) {
                 status = Monitor::run();
-                run = analizeStrategyStatus(status);
+                run = analyzeStrategyStatus(status);
 
-                if(run && newMesurmentData != AnalogInputs::getFullMeasurementCount()) {
-                    newMesurmentData = AnalogInputs::getFullMeasurementCount();
+                if(run && newMeasurementData != AnalogInputs::getFullMeasurementCount()) {
+                    newMeasurementData = AnalogInputs::getFullMeasurementCount();
                     status = strategyDoStrategy();
-                    run = analizeStrategyStatus(status);
+                    run = analyzeStrategyStatus(status);
                 }
             }
             if(!run && exitImmediately && status != Strategy::ERROR)

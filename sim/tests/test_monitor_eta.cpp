@@ -63,7 +63,7 @@ static void test_eta_time_with_and_without_balance_port()
 {
     EtaState s;
     s.etaDeltaSec = 10;
-    s.procent_    = 0;
+    s.percent_    = 0;
 
     // With balance port: factor 105 -> 10 * 105 = 1050
     assert(compute_eta_time(s, /*balance_port_connected=*/true)  == 1050);
@@ -76,11 +76,11 @@ static void test_eta_time_shrinks_with_progress()
     EtaState s;
     s.etaDeltaSec = 10;
 
-    s.procent_ = 50;
+    s.percent_ = 50;
     assert(compute_eta_time(s, true)  == 10 * (105 - 50));  // 550
     assert(compute_eta_time(s, false) == 10 * (100 - 50));  // 500
 
-    s.procent_ = 99;
+    s.percent_ = 99;
     assert(compute_eta_time(s, true)  == 10 * (105 - 99));  // 60
     assert(compute_eta_time(s, false) == 10 * (100 - 99));  // 10
 }
@@ -90,14 +90,14 @@ static void test_eta_time_shrinks_with_progress()
 static void test_eta_state_unchanged_when_no_percent_change()
 {
     EtaState s;
-    s.procent_         = 50;
+    s.percent_         = 50;
     s.etaStartTimeCalc = 100;
     s.etaDeltaSec      = 7;
 
     // Same percent reported -> nothing updates
     update_eta_state(s, /*current_percent=*/50, /*time_sec=*/200);
 
-    assert(s.procent_         == 50);
+    assert(s.percent_         == 50);
     assert(s.etaStartTimeCalc == 100);
     assert(s.etaDeltaSec      == 7);
 }
@@ -114,7 +114,7 @@ static void test_eta_records_elapsed_time_on_first_percent_jump()
     EtaState s;
     update_eta_state(s, /*current_percent=*/1, /*time_sec=*/30);
 
-    assert(s.procent_         == 1);
+    assert(s.percent_         == 1);
     assert(s.etaStartTimeCalc == 30);
     assert(s.etaDeltaSec      == 30);
 
@@ -126,7 +126,7 @@ static void test_eta_records_elapsed_time_on_first_percent_jump()
 static void test_eta_stays_pessimistic_when_subsequent_jumps_are_faster()
 {
     // Second jump happened FASTER (45-30 = 15 s) than the first (30 s).
-    // The "find longer time for deltaprocent" branch is gated on
+    // The "find longer time for deltapercent" branch is gated on
     // etaSec > etaDeltaSec, so etaDeltaSec stays at the slower value.
     // This is the pessimistic-by-design behaviour: ETA never shrinks
     // based on a single faster percent.
@@ -134,7 +134,7 @@ static void test_eta_stays_pessimistic_when_subsequent_jumps_are_faster()
     update_eta_state(s, 1, 30);   // first jump, 30 s
     update_eta_state(s, 2, 45);   // second jump, 15 s
 
-    assert(s.procent_         == 2);
+    assert(s.percent_         == 2);
     assert(s.etaStartTimeCalc == 45);
     assert(s.etaDeltaSec      == 30);  // kept the slower step
 }
@@ -147,7 +147,7 @@ static void test_eta_grows_when_subsequent_jump_is_slower()
     update_eta_state(s, 1, 30);
     update_eta_state(s, 2, 90);
 
-    assert(s.procent_         == 2);
+    assert(s.percent_         == 2);
     assert(s.etaStartTimeCalc == 90);
     assert(s.etaDeltaSec      == 60);  // grew to slower step
 }

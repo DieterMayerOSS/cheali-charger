@@ -147,7 +147,7 @@ void Balancer::setBalance(uint16_t v)
         hardware::setBalancer(v);
 }
 
-void Balancer::startBalacing()
+void Balancer::startBalancing()
 {
     //test if battery has recovered after last balancing
     if(!isStable(balancerStartStableCount) || !AnalogInputs::isOutStable())
@@ -235,7 +235,7 @@ Strategy::statusType Balancer::doStrategy()
 {
     LogDebug("minCell=", minCell, " balance=", balance, " conCells=", connectedCells);
     if(balance == 0) {
-            startBalacing();
+            startBalancing();
     } else {
         trySaveVon();
         if(getBalanceTime() > maxBalanceTime) {

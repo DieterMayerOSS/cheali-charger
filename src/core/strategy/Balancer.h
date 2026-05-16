@@ -47,7 +47,7 @@ namespace Balancer {
     void powerOn();
     void powerOff();
     Strategy::statusType doStrategy();
-    void startBalacing();
+    void startBalancing();
     void trySaveVon();
     uint16_t getBalanceTime();
 

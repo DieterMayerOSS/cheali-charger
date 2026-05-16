@@ -184,8 +184,8 @@ void finalizeMeasurement()
             AnalogInputs::i_avrSum_[AnalogInputs::Vout_minus_pin]   /= ADC_STANDARD_PER_ROUND;
             AnalogInputs::i_avrSum_[AnalogInputs::Idischarge]       /= ADC_I_DISCHARGE_PER_ROUND;
         }
-        //TODO: maybe intterruptFinalizeMeasurement should be removed
-        AnalogInputs::intterruptFinalizeMeasurement();
+        //TODO: maybe interruptFinalizeMeasurement should be removed
+        AnalogInputs::interruptFinalizeMeasurement();
     }
 
 }

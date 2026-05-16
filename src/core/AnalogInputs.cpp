@@ -434,7 +434,7 @@ void AnalogInputs::doSlowInterrupt()
 
 // finalize Measurement
 
-void AnalogInputs::intterruptFinalizeMeasurement()
+void AnalogInputs::interruptFinalizeMeasurement()
 {
     if(i_avrCount_>0)
         i_avrCount_--;

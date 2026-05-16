@@ -31,10 +31,10 @@
 namespace TheveninMethod {
 
     enum State {ConstantCurrentBalancing, ConstantCurrent,
-                LastRthMesurment, LastConstantCurrent, ConstantVoltageBalancing};
+                LastRthMeasurement, LastConstantCurrent, ConstantVoltageBalancing};
     /* possible transitions:
      *   ConstantCurrentBalancing --> ConstantCurrent -->
-     *   LastRthMesurment --> LastConstantCurrent --> ConstantVoltageBalancing
+     *   LastRthMeasurement --> LastConstantCurrent --> ConstantVoltageBalancing
      */
 
     State state_;
@@ -44,7 +44,7 @@ namespace TheveninMethod {
     Thevenin tBal_[MAX_BALANCE_CELLS];
     uint8_t fullCount_;
 
-    uint16_t lastBallancingEnded_;
+    uint16_t lastBalancingEnded_;
     Strategy::statusType bstatus_;
 
     AnalogInputs::ValueType calculateI();
@@ -177,11 +177,11 @@ AnalogInputs::ValueType TheveninMethod::calculateNewI(bool isEndVout, AnalogInpu
         case ConstantCurrent:
             if(!isEndVout)
                 break;
-            state_ = LastRthMesurment;
+            state_ = LastRthMeasurement;
             //temporarily turn off
             newI_ = 0;
             break;
-        case LastRthMesurment:
+        case LastRthMeasurement:
             newI_ = 0;
             state_ = LastConstantCurrent;
             break;
@@ -240,9 +240,9 @@ AnalogInputs::ValueType TheveninMethod::normalizeI(AnalogInputs::ValueType newI,
         if(state_ != ConstantVoltageBalancing
             || newI < I
             || newI <= getMinIwithBalancer()
-            || (I <= Strategy::minI && lastBallancingEnded_ != Balancer::balancingEnded)) {
+            || (I <= Strategy::minI && lastBalancingEnded_ != Balancer::balancingEnded)) {
 
-            lastBallancingEnded_ = Balancer::balancingEnded;
+            lastBalancingEnded_ = Balancer::balancingEnded;
             return newI;
         }
     }

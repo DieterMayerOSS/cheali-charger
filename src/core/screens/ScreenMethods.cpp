@@ -219,8 +219,8 @@ void Screen::Methods::displayEnergy()
     AnalogInputs::printRealValue(AnalogInputs::Eout, 8);
     lcdPrintSpaces(2);
 
-    uint8_t procent = Monitor::getChargeProcent();
-    lcdPrintUnsigned(procent, 4);
+    uint8_t percent = Monitor::getChargePercent();
+    lcdPrintUnsigned(percent, 4);
     lcdPrint_P(PSTR("%"));
     lcdPrintSpaces();
 }

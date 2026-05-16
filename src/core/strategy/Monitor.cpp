@@ -45,43 +45,43 @@ namespace Monitor {
     bool isBalancePortConnected;
 
     bool on_;
-    uint8_t procent_;
+    uint8_t percent_;
     uint32_t startTime_totalTime_;
     uint32_t totalBalanceTime_;
-    uint32_t totalChargDischargeTime_;
+    uint32_t totalChargeDischargeTime_;
 
     uint16_t Vout_plus_adcMinLimit_;
     uint16_t Vout_plus_adcMaxLimit_;
 
-    void calculateDeltaProcentTimeSec();
+    void calculateDeltaPercentTimeSec();
 
 } // namespace Monitor
 
-void Monitor::calculateDeltaProcentTimeSec()
+void Monitor::calculateDeltaPercentTimeSec()
 {
     uint32_t etaSec;
-    uint8_t procent = Monitor::getChargeProcent();
-    if(procent_ < procent) {
-        procent_ = procent;
+    uint8_t percent = Monitor::getChargePercent();
+    if(percent_ < percent) {
+        percent_ = percent;
         etaSec = Monitor::getTimeSec() - Monitor::etaStartTimeCalc;
         etaStartTimeCalc = Monitor::getTimeSec();
         if (etaSec > etaDeltaSec)  {
-            etaDeltaSec=etaSec; // find longer time for deltaprocent
+            etaDeltaSec=etaSec; // find longer time for deltapercent
         }
     }
 }
 
 uint32_t Monitor::getETATime()
 {
-    calculateDeltaProcentTimeSec();
+    calculateDeltaPercentTimeSec();
     uint8_t kx = 105;
     if(!Monitor::isBalancePortConnected) {
         //balancer not connected
         kx=100;
     }
 
-    //if (getChargeProcent()==99) {return (0);} //no avail more calc (or call secondary calculator)
-    return (etaDeltaSec*(kx-procent_));
+    //if (getChargePercent()==99) {return (0);} //no avail more calc (or call secondary calculator)
+    return (etaDeltaSec*(kx-percent_));
 }
 
 uint32_t Monitor::getTimeSec()
@@ -96,16 +96,16 @@ uint32_t Monitor::getTotalBalanceTimeSec() {
 }
 
 uint32_t Monitor::getTotalChargeDischargeTimeSec() {
-    return totalChargDischargeTime_/1000;
+    return totalChargeDischargeTime_/1000;
 }
 
 uint16_t Monitor::getTotalChargeDischargeTimeMin() {
-    return totalChargDischargeTime_/1000/60;
+    return totalChargeDischargeTime_/1000/60;
 }
 
 
 
-uint8_t Monitor::getChargeProcent() {
+uint8_t Monitor::getChargePercent() {
     uint16_t v1,v2, v;
     v2 = ProgramData::getVoltage(ProgramData::VCharged);
     v1 = ProgramData::getVoltage(ProgramData::VvalidEmpty);
@@ -180,12 +180,12 @@ void Monitor::powerOn()
 
 void Monitor::resetAccumulatedMeasurements()
 {
-    procent_ = getChargeProcent();
+    percent_ = getChargePercent();
     etaStartTimeCalc = 0;
     etaDeltaSec = 0;
 
     totalBalanceTime_ = 0;
-    totalChargDischargeTime_ = 0;
+    totalChargeDischargeTime_ = 0;
 }
 
 
@@ -198,7 +198,7 @@ void Monitor::powerOff()
 void Monitor::doSlowInterrupt()
 {
    if(SMPS::isWorking() || Discharger::isWorking())
-       totalChargDischargeTime_ += SLOW_INTERRUPT_PERIOD_MILISECONDS;
+       totalChargeDischargeTime_ += SLOW_INTERRUPT_PERIOD_MILISECONDS;
 
    if(Balancer::isWorking())
        totalBalanceTime_ += SLOW_INTERRUPT_PERIOD_MILISECONDS;

@@ -20,7 +20,7 @@
 //      │ isEndVout
 //      │ newI := 0
 //      ↓
-//   LastRthMesurment
+//   LastRthMeasurement
 //      │ unconditional
 //      │ newI := 0
 //      ↓
@@ -29,9 +29,9 @@
 //      ↓
 //   ConstantVoltageBalancing  (terminal, self-loops via default:)
 //
-// HISTORY: an unreachable RthMesurment state used to live in the
+// HISTORY: an unreachable RthMeasurement state used to live in the
 // enum, with a switch case that routed it back to ConstantCurrentBalancing.
-// Nothing in the firmware ever assigned state_ = RthMesurment, so the
+// Nothing in the firmware ever assigned state_ = RthMeasurement, so the
 // case was pure dead code. Removed in this fork; see git history.
 //
 // DUPLICATE TRANSITION: ConstantCurrentBalancing → ConstantCurrent
@@ -49,7 +49,7 @@ namespace cheali_sim {
 enum class TheveninState : uint8_t {
     ConstantCurrentBalancing,   // initial state, CC charge with balancing active
     ConstantCurrent,            // CC charge after balancing ended
-    LastRthMesurment,           // final Rth probe before CV
+    LastRthMeasurement,           // final Rth probe before CV
     LastConstantCurrent,        // final CC step
     ConstantVoltageBalancing,   // terminal CV phase
 };

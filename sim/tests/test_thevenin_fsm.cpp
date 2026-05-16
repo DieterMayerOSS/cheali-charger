@@ -37,15 +37,15 @@ static void test_cc_stays_when_not_end_vout()
 static void test_cc_transitions_to_last_rth_with_zero_current()
 {
     auto r = thevenin_step_calc_new_i(TheveninState::ConstantCurrent, true);
-    assert(r.next_state == TheveninState::LastRthMesurment);
+    assert(r.next_state == TheveninState::LastRthMeasurement);
     assert(r.effects.zero_current == true);
     assert(r.effects.end_balancing == false);
 }
 
 static void test_last_rth_unconditional_with_zero_current()
 {
-    auto r_true  = thevenin_step_calc_new_i(TheveninState::LastRthMesurment, true);
-    auto r_false = thevenin_step_calc_new_i(TheveninState::LastRthMesurment, false);
+    auto r_true  = thevenin_step_calc_new_i(TheveninState::LastRthMeasurement, true);
+    auto r_false = thevenin_step_calc_new_i(TheveninState::LastRthMeasurement, false);
     // No conditional on is_end_vout — always advances
     assert(r_true.next_state  == TheveninState::LastConstantCurrent);
     assert(r_false.next_state == TheveninState::LastConstantCurrent);
@@ -97,7 +97,7 @@ static void test_balance_check_does_nothing_in_wrong_state()
 {
     // Only fires from ConstantCurrentBalancing — other states are ignored
     for (auto s : {TheveninState::ConstantCurrent,
-                   TheveninState::LastRthMesurment,
+                   TheveninState::LastRthMeasurement,
                    TheveninState::LastConstantCurrent,
                    TheveninState::ConstantVoltageBalancing}) {
         auto r = thevenin_step_balance_check(s, true, true);
@@ -135,7 +135,7 @@ static void test_duplicate_cc_balancing_to_cc_transition_in_sequence()
     // Step 2: calc_new_i runs on the new state. Now we're in CC with
     // is_end_vout still true → advances to LastRth.
     auto step2 = thevenin_step_calc_new_i(step1.next_state, true);
-    assert(step2.next_state == TheveninState::LastRthMesurment);
+    assert(step2.next_state == TheveninState::LastRthMeasurement);
     assert(step2.effects.zero_current == true);
 
     // Net effect of one firmware cycle: CC_Balancing -> CC -> LastRth.
@@ -166,7 +166,7 @@ static void test_full_charge_sequence()
     // calc_new_i runs after: CC + is_end_vout -> LastRth (zero current)
     auto r1 = thevenin_step_calc_new_i(s, true);
     s = r1.next_state;
-    assert(s == TheveninState::LastRthMesurment);
+    assert(s == TheveninState::LastRthMeasurement);
     assert(r1.effects.zero_current);
 
     // LastRth: unconditional advance, zero current

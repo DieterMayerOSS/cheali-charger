@@ -42,12 +42,12 @@ Total: **107 test cases**.
 Each fix has a corresponding test that pins down the corrected
 behaviour. See the relevant commit message for context.
 
-1. **ETA timer subtraction order** — `Monitor::calculateDeltaProcentTimeSec`
+1. **ETA timer subtraction order** — `Monitor::calculateDeltaPercentTimeSec`
    had reversed operands since 2013, underflowing to `~UINT32_MAX` and
    making the displayed ETA garbage.
 2. **uint16 underflow in `isCalibrationRequired`** — empty connection
    mask underflowed `Vmax - Vmin` to 1; guarded with an early return.
-3. **Dead state `RthMesurment`** — declared in the `TheveninMethod`
+3. **Dead state `RthMeasurement`** — declared in the `TheveninMethod`
    State enum with an unreachable switch case; removed.
 4. **Div-by-zero in `calibrateValue` / `reverseCalibrateValue`** —
    degenerate calibration (`p0.x == p1.x` or `p0.y == p1.y`) was UB;

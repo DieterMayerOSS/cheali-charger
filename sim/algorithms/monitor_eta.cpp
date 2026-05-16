@@ -31,12 +31,12 @@ void update_eta_state(EtaState& state,
                       uint8_t current_percent,
                       uint32_t time_sec)
 {
-    if (state.procent_ < current_percent) {
-        state.procent_ = current_percent;
+    if (state.percent_ < current_percent) {
+        state.percent_ = current_percent;
         uint32_t etaSec = time_sec - state.etaStartTimeCalc;
         state.etaStartTimeCalc = time_sec;
         if (etaSec > state.etaDeltaSec) {
-            state.etaDeltaSec = etaSec;  // "find longer time for deltaprocent"
+            state.etaDeltaSec = etaSec;  // "find longer time for deltapercent"
         }
     }
 }
@@ -45,7 +45,7 @@ uint32_t compute_eta_time(const EtaState& state, bool balance_port_connected)
 {
     uint8_t kx = balance_port_connected ? ETA_FACTOR_WITH_BALANCE_PORT
                                         : ETA_FACTOR_WITHOUT_BALANCE_PORT;
-    return state.etaDeltaSec * static_cast<uint32_t>(kx - state.procent_);
+    return state.etaDeltaSec * static_cast<uint32_t>(kx - state.percent_);
 }
 
 }  // namespace cheali_sim

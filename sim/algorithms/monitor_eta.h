@@ -1,7 +1,7 @@
 #pragma once
 
 // Pure C++ port of Monitor's ETA logic
-// (src/core/strategy/Monitor.cpp: getChargeProcent, calculateDeltaProcentTimeSec,
+// (src/core/strategy/Monitor.cpp: getChargePercent, calculateDeltaPercentTimeSec,
 //  getETATime). Verbatim semantics — including a real bug, see below.
 //
 // The factors 105 / 100 in compute_eta_time() are undocumented in the
@@ -15,7 +15,7 @@
 
 namespace cheali_sim {
 
-// Port of Monitor::getChargeProcent().
+// Port of Monitor::getChargePercent().
 //
 // Maps a measured pack voltage onto a [0..99]% scale linearly between
 // v_empty and v_charged. Notes:
@@ -36,10 +36,10 @@ uint8_t compute_charge_percent(uint16_t v_terminal,
 struct EtaState {
     uint32_t etaStartTimeCalc = 0;  // time of the last percent jump
     uint32_t etaDeltaSec      = 0;  // largest observed inter-percent interval
-    uint8_t  procent_         = 0;  // last seen percent (sic: Polish-ism)
+    uint8_t  percent_         = 0;  // last seen percent (sic: Polish-ism)
 };
 
-// Port of Monitor::calculateDeltaProcentTimeSec().
+// Port of Monitor::calculateDeltaPercentTimeSec().
 //
 // Called every cycle. If the charge percent has just incremented since
 // the last call, records how long that took and keeps the maximum
@@ -55,10 +55,10 @@ void update_eta_state(EtaState& state,
                       uint32_t time_sec);
 
 // Port of Monitor::getETATime() — minus the embedded call to
-// calculateDeltaProcentTimeSec (we keep that explicit so tests can
+// calculateDeltaPercentTimeSec (we keep that explicit so tests can
 // drive the two stages separately).
 //
-// Returns etaDeltaSec * (kx - procent_), where kx = 105 if a balance
+// Returns etaDeltaSec * (kx - percent_), where kx = 105 if a balance
 // port is connected, else 100. Result is uint32_t and can wrap silently
 // if etaDeltaSec has been corrupted by the bug above.
 uint32_t compute_eta_time(const EtaState& state, bool balance_port_connected);

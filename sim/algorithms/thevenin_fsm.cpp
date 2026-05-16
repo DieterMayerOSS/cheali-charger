@@ -16,11 +16,11 @@ TheveninTransitionResult thevenin_step_calc_new_i(TheveninState current,
 
     case TheveninState::ConstantCurrent:
         if (!is_end_vout) break;
-        r.next_state           = TheveninState::LastRthMesurment;
+        r.next_state           = TheveninState::LastRthMeasurement;
         r.effects.zero_current = true;
         break;
 
-    case TheveninState::LastRthMesurment:
+    case TheveninState::LastRthMeasurement:
         r.effects.zero_current = true;
         r.next_state           = TheveninState::LastConstantCurrent;
         break;

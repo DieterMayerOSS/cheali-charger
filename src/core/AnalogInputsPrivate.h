@@ -33,7 +33,7 @@ namespace AnalogInputs {
     extern volatile bool on_;
     extern volatile bool onTintern_;
 
-    void intterruptFinalizeMeasurement();
+    void interruptFinalizeMeasurement();
     void resetStable();
 
     void doIdle();

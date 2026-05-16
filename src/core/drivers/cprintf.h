@@ -33,7 +33,7 @@
 #define CP_TYPE_SIGNED_mV       CP_TYPE_ANALOG(AnalogInputs::SignedVoltage)
 #define CP_TYPE_V               CP_TYPE_ANALOG(AnalogInputs::Voltage)
 #define CP_TYPE_MINUTES         CP_TYPE_ANALOG(AnalogInputs::Minutes)
-#define CP_TYPE_PROCENTAGE      CP_TYPE_ANALOG(AnalogInputs::Procent)
+#define CP_TYPE_PROCENTAGE      CP_TYPE_ANALOG(AnalogInputs::Percent)
 #define CP_TYPE_A               CP_TYPE_ANALOG(AnalogInputs::Current)
 #define CP_TYPE_W               CP_TYPE_ANALOG(AnalogInputs::Power)
 #define CP_TYPE_TEMP_MINUT      CP_TYPE_ANALOG(AnalogInputs::TemperatureMinutes)
