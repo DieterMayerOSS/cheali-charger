@@ -1,17 +1,13 @@
 #include "balancer_logic.h"
 
+#include <bit>
 #include <climits>
 
 namespace cheali_sim {
 
 uint8_t count_connected_cells(uint16_t connected_mask)
 {
-    uint8_t bits = 0;
-    for (int8_t i = 0; i < 16; ++i) {
-        if (connected_mask & 1u) ++bits;
-        connected_mask >>= 1;
-    }
-    return bits;
+    return static_cast<uint8_t>(std::popcount(connected_mask));
 }
 
 uint16_t calculate_per_cell(uint16_t v, uint8_t cell_count)
@@ -21,17 +17,16 @@ uint16_t calculate_per_cell(uint16_t v, uint8_t cell_count)
 }
 
 bool is_calibration_required(uint16_t connected_mask,
-                             const uint16_t* cell_voltages,
-                             uint8_t max_cells,
+                             std::span<const uint16_t> cells,
                              uint16_t balancer_error)
 {
     if (connected_mask == 0) return false;
 
     uint16_t Vmin = UINT16_MAX;
     uint16_t Vmax = 0;
-    for (uint8_t i = 0; i < max_cells; ++i) {
+    for (size_t i = 0; i < cells.size(); ++i) {
         if (connected_mask & (1u << i)) {
-            uint16_t vi = cell_voltages[i];
+            const uint16_t vi = cells[i];
             if (Vmax < vi) Vmax = vi;
             if (vi < Vmin) Vmin = vi;
         }
@@ -41,18 +36,16 @@ bool is_calibration_required(uint16_t connected_mask,
 
 uint16_t calculate_balance(int8_t min_cell_index,
                            uint16_t connected_mask,
-                           const uint16_t* cell_voltages,
-                           uint8_t max_cells)
+                           std::span<const uint16_t> cells)
 {
     if (min_cell_index < 0) return 0;
 
-    uint16_t vmin = cell_voltages[min_cell_index];
+    const uint16_t vmin = cells[static_cast<size_t>(min_cell_index)];
     uint16_t retu = 0;
     uint16_t cell_bit = 1;
-    for (uint8_t c = 0; c < max_cells; ++c) {
+    for (size_t c = 0; c < cells.size(); ++c) {
         if (connected_mask & cell_bit) {
-            uint16_t v = cell_voltages[c];
-            if (v > vmin) {
+            if (cells[c] > vmin) {
                 retu |= cell_bit;
             }
         }
@@ -62,26 +55,24 @@ uint16_t calculate_balance(int8_t min_cell_index,
 }
 
 bool is_max_vout(uint16_t connected_mask,
-                 const uint16_t* cell_voltages,
-                 uint8_t max_cells,
+                 std::span<const uint16_t> cells,
                  uint16_t max_v)
 {
-    for (uint8_t c = 0; c < max_cells; ++c) {
+    for (size_t c = 0; c < cells.size(); ++c) {
         if (connected_mask & (1u << c)) {
-            if (cell_voltages[c] >= max_v) return true;
+            if (cells[c] >= max_v) return true;
         }
     }
     return false;
 }
 
 bool is_min_vout(uint16_t connected_mask,
-                 const uint16_t* cell_voltages,
-                 uint8_t max_cells,
+                 std::span<const uint16_t> cells,
                  uint16_t min_v)
 {
-    for (uint8_t c = 0; c < max_cells; ++c) {
+    for (size_t c = 0; c < cells.size(); ++c) {
         if (connected_mask & (1u << c)) {
-            if (cell_voltages[c] <= min_v) return true;
+            if (cells[c] <= min_v) return true;
         }
     }
     return false;

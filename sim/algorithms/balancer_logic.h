@@ -5,6 +5,7 @@
 // quirks that may or may not be intentional.
 
 #include <cstdint>
+#include <span>
 
 namespace cheali_sim {
 
@@ -27,8 +28,7 @@ uint16_t calculate_per_cell(uint16_t v, uint8_t cell_count);
 // were connected (Vmax=0, Vmin=UINT16_MAX -> Vmax-Vmin=1). Fixed
 // in this fork by an early return when connected_mask == 0.
 bool is_calibration_required(uint16_t connected_mask,
-                             const uint16_t* cell_voltages,
-                             uint8_t max_cells,
+                             std::span<const uint16_t> cells,
                              uint16_t balancer_error);
 
 // Port of Balancer::calculateBalance().
@@ -38,27 +38,24 @@ bool is_calibration_required(uint16_t connected_mask,
 //
 // Returns 0 if min_cell_index < 0 (firmware sentinel meaning "no min
 // cell has been picked yet"). Caller must ensure min_cell_index is
-// either negative or within [0, max_cells); the firmware doesn't
+// either negative or within [0, cells.size()); the firmware doesn't
 // bounds-check the lookup either.
 uint16_t calculate_balance(int8_t min_cell_index,
                            uint16_t connected_mask,
-                           const uint16_t* cell_voltages,
-                           uint8_t max_cells);
+                           std::span<const uint16_t> cells);
 
 // Port of Balancer::isMaxVout().
 // Returns true iff any connected cell's voltage is >= max_v.
 // Used to detect "any cell reached the upper voltage limit".
 bool is_max_vout(uint16_t connected_mask,
-                 const uint16_t* cell_voltages,
-                 uint8_t max_cells,
+                 std::span<const uint16_t> cells,
                  uint16_t max_v);
 
 // Port of Balancer::isMinVout().
 // Returns true iff any connected cell's voltage is <= min_v.
 // Used to detect "any cell hit the discharge cutoff".
 bool is_min_vout(uint16_t connected_mask,
-                 const uint16_t* cell_voltages,
-                 uint8_t max_cells,
+                 std::span<const uint16_t> cells,
                  uint16_t min_v);
 
 }  // namespace cheali_sim
