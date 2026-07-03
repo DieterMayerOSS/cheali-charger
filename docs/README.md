@@ -22,3 +22,12 @@ spun off as separate issues or done inline if trivial.
 The other subdirectories (`GTPowerA6-10/`, `Turnigy_MEGA400x2/`,
 `Turnigy MAX80/`, etc.) carry photos, schematics, and target-specific
 notes inherited from upstream. They predate this fork's audit pass.
+
+## Related repositories
+
+- [DieterMayerOSS/cheali-charger-stm32](https://github.com/DieterMayerOSS/cheali-charger-stm32) —
+  STM32CubeIDE-based port of the algorithmic core to ROB's iMaxB6 80W
+  hardware (STM32F030C8T6). Separate repo because the CubeIDE/ST-HAL
+  workflow doesn't fit the AVR-CMake pattern in this tree. See
+  [stm32f030-pinout.md](stm32f030-pinout.md) for the shared reference
+  pin table.

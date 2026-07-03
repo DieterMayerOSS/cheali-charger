@@ -1,8 +1,13 @@
 # STM32F030C8T6 pinout — "ROB" iMaxB6 80W board
 
 Source: schematic transcribed 2026-05-17 from a board designed by
-"ROB". This is the reference document for the
-[`src/hardware/stm32f030/`](../src/hardware/stm32f030/) HAL scaffold.
+"ROB".
+
+**The actual port** lives in a separate repository:
+[**DieterMayerOSS/cheali-charger-stm32**](https://github.com/DieterMayerOSS/cheali-charger-stm32) —
+STM32CubeIDE-based, uses ST HAL/LL, embeds this fork's algorithmic
+core. This document stays here as a reference so anyone else planning
+an STM32 port of cheali-charger has a starting-point pin table.
 
 ## MCU
 
